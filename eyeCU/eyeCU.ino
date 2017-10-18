@@ -7,6 +7,7 @@
 #define SOUND_GATE_IN 4
 #define SOUND_ANALOG_IN A0
 #define PIR_IN 0
+#define BUTTON 15
 #define CCS811_ADDR 0x5B
 
 // Global variables:
@@ -23,6 +24,7 @@ void setup() {
   
 
   pinMode(5, OUTPUT); // WiFi Status LED
+  pinMode(BUTTON, INPUT); // Red button
 
   Serial.begin(9600);
   connectWiFi();
@@ -81,6 +83,12 @@ void setup() {
 }
 
 void loop() {
+
+  /////////////// Button ///////////////
+
+  if(digitalRead(BUTTON) == HIGH){
+    Serial.println("Button Pressed!");
+  }
 
   /////////////// PIR Sensor Data ///////////////
 
