@@ -6,7 +6,7 @@
 
 #define SOUND_GATE_IN 4
 #define SOUND_ANALOG_IN A0
-#define PIR_IN 0
+#define PIR_IN 5
 #define BUTTON 15
 #define CCS811_ADDR 0x5B
 
@@ -14,7 +14,8 @@
 
 boolean gain;     // Gain setting, 0 = X1, 1 = X16;
 unsigned int ms;  // Integration ("shutter") time in milliseconds
-
+const char ssid[] = "UCB Wireless";
+const char password[] = "";
 
 CCS811 myCCS811(CCS811_ADDR);
 BME280 bme;
@@ -22,14 +23,13 @@ SFE_TSL2561 light;
 
 void setup() {
   
-
-  pinMode(5, OUTPUT); // WiFi Status LED
   pinMode(BUTTON, INPUT); // Red button
-
+  
   Serial.begin(9600);
+  Serial.println("Started Serial, running connectWiFi");
+  
   connectWiFi();
-
-  digitalWrite(5, LOW); // WHY DOES THIS TURN THE LED *ON* ???
+  Serial.println("exited connectWiFi");
 
   /////////////// PIR Sensor Setup ///////////////
 
@@ -84,10 +84,15 @@ void setup() {
 
 void loop() {
 
+  if(WiFi.status() != WL_CONNECTED){
+    ESP.reset();
+  }
+  
   /////////////// Button ///////////////
 
   if(digitalRead(BUTTON) == HIGH){
     Serial.println("Button Pressed!");
+
   }
 
   /////////////// PIR Sensor Data ///////////////
@@ -129,7 +134,7 @@ void loop() {
   /////////////// Luminosity Sensor Data ///////////////
 
   unsigned int dataIR, datVIS;
-  
+  double lux;
   if (light.getData(dataIR,datVIS))
   {
     // getData() returned true, communication was successful
@@ -139,7 +144,7 @@ void loop() {
     Serial.print(" Visibile: "); //1 lumen/m^2
     Serial.print(datVIS);
   
-    double lux;    // Resulting lux value
+        // Resulting lux value
     boolean good;  // True if neither sensor is saturated
 
     good = light.getLux(gain,ms,dataIR,datVIS,lux);
@@ -192,7 +197,34 @@ void loop() {
     Serial.println(myCCS811.getErrorRegister()); //Prints whatever CSS811 error flags are detected
   }
 
-  delay(2000); //Wait for next reading
+  /*data = "temperature=" + String[tempC] + "&humidity=" + String[humidity]
+       + "&pressure=" + String[pressure] + "&altitude=" + String[altitude] + 
+       "&co2=" + String[myCCS811.getCO2()] + "&voc=" + String[myCCS811.getTVOC()]
+       + "&light=" + String[lux] + "&sound=" + String[soundlevel] 
+       + "&motion=" + String[digitalRead(PIR_IN)] + "&button=" + String[digitalRead(BUTTON)];*/
+
+  /////////////// Get Request to Server ///////////////
+
+  String data = "&field1=" + String(tempC) + "&field2=" + String(humidity)
+       + "&field3=" + String(pressure) + "&field4=" + String(altitude) + 
+       "&field5=" + String(myCCS811.getCO2()) + "&field6=" + String(myCCS811.getTVOC()) +
+       "&field7=" + String(lux) + "&field8=" + String(soundLevel);
+
+  const char* host = "api.thingspeak.com";
+  String url = "/update?api_key=ISYE8BDU6ZCFUVC2";
+  Serial.println(host + url + data);
+  WiFiClient client;
+  const int httpPort = 80;
+  if (!client.connect(host, httpPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+
+  client.print(String("GET ") + url + data + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+
+  delay(10000); //Wait for next reading
 
 }
 
@@ -254,7 +286,7 @@ void printError(byte error)
 
 void connectWiFi()
 {
-  /*byte ledStatus = LOW;
+  byte ledStatus = LOW;
   Serial.println();
   Serial.println("Connecting to: " + String(ssid));
   // Set WiFi mode to station (as opposed to AP or AP_STA)
@@ -263,14 +295,13 @@ void connectWiFi()
   // WiFI.begin([ssid], [passkey]) initiates a WiFI connection
   // to the stated [ssid], using the [passkey] as a WPA, WPA2,
   // or WEP passphrase.
-  //WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
 
   // Use the WiFi.status() function to check if the ESP8266
   // is connected to a WiFi network.
   while (WiFi.status() != WL_CONNECTED)
   {
     // Blink the LED
-    digitalWrite(5, ledStatus); // Write LED high/low
     ledStatus = (ledStatus == HIGH) ? LOW : HIGH;
 
     // Delays allow the ESP8266 to perform critical tasks
@@ -283,7 +314,7 @@ void connectWiFi()
   }
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());*/
+  Serial.println(WiFi.localIP());
 }
 
 
