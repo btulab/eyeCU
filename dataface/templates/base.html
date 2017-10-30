@@ -1,0 +1,35 @@
+{% extends "bootstrap/base.html" %}
+{% block head %}
+	<title>eyeCU</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+{% endblock %}
+{% block title %}
+	eyeCU
+{% endblock %}
+{% block navbar %}
+	<h1 class="eyecu-title container">
+		<a href="/" class="eyecu-title-link">
+			<i>eye</i>
+			<img src="/static/images/eyeCUlogoicon-unofficial.png" class="logoicon">
+		</a>
+	</h1>
+	<div class="container navigation">
+		<div class="col-sm-2">&nbsp;</div>
+		<div class="col-sm-2"><a class="navitem" href="map">Map</a></div>
+		<div class="col-sm-2"><a class="navitem">Data</a></div>
+		<div class="col-sm-2"><a class="navitem">Test</a></div>
+		<div class="col-sm-2">
+		    <a class="dropdown-toggle navitem" data-toggle="dropdown" href="#">Menu 1
+		    <span class="caret"></span></a>
+		    <ul class="dropdown-menu">
+				<li><a href="#">Submenu 1-1</a></li>
+				<li><a href="#">Submenu 1-2</a></li>
+				<li><a href="#">Submenu 1-3</a></li>
+		    </ul>
+		</div>
+		<div class="col-sm-2">&nbsp;</div>
+	</div>
+{% endblock %}
