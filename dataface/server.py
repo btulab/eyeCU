@@ -19,3 +19,4 @@ def map():
 @app.route('/login')
 def login():
 	return 0
+
