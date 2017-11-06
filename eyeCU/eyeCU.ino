@@ -14,22 +14,31 @@
 
 boolean gain;     // Gain setting, 0 = X1, 1 = X16;
 unsigned int ms;  // Integration ("shutter") time in milliseconds
-const char ssid[] = "UCB Wireless";
-const char password[] = "";
+const char ssid[] = "SOC-LAB";
+const char password[] = "REDACTED";
+int buttonPressed = 0;
 
 CCS811 myCCS811(CCS811_ADDR);
 BME280 bme;
 SFE_TSL2561 light;
 
 void setup() {
+
+  
   
   pinMode(BUTTON, INPUT); // Red button
   
   Serial.begin(9600);
   Serial.println("Started Serial, running connectWiFi");
+
+  IPAddress ip(192, 168, 20, 86);
+  IPAddress gateway(192, 168, 20, 1);
+  IPAddress subnet(255, 255, 255, 0);
+  WiFi.config(ip, gateway, subnet); 
   
   connectWiFi();
   Serial.println("exited connectWiFi");
+
 
   /////////////// PIR Sensor Setup ///////////////
 
@@ -84,13 +93,27 @@ void setup() {
 
 void loop() {
 
+   delay(5000); //Wait for next reading
+
   if(WiFi.status() != WL_CONNECTED){
     ESP.reset();
+   
+  }
+
+  String url = "http://128.138.75.7";
+  //Serial.println(host + url + data);
+  WiFiClient client;
+  const int httpPort = 80;
+  if (!client.connect("128.138.75.7", httpPort)) {
+    Serial.println("connection failed");
+    
+    return;
   }
   
   /////////////// Button ///////////////
 
   if(digitalRead(BUTTON) == HIGH){
+    buttonPressed = 1;
     Serial.println("Button Pressed!");
 
   }
@@ -197,34 +220,46 @@ void loop() {
     Serial.println(myCCS811.getErrorRegister()); //Prints whatever CSS811 error flags are detected
   }
 
-  /*data = "temperature=" + String[tempC] + "&humidity=" + String[humidity]
+/*format for URL will be http://IPADDRESS(which should be 128.138.75.7)/enterData/id=value&id2=value2.... like below
+   "temperature=" + String[tempC] + "&humidity=" + String[humidity]
        + "&pressure=" + String[pressure] + "&altitude=" + String[altitude] + 
        "&co2=" + String[myCCS811.getCO2()] + "&voc=" + String[myCCS811.getTVOC()]
        + "&light=" + String[lux] + "&sound=" + String[soundlevel] 
-       + "&motion=" + String[digitalRead(PIR_IN)] + "&button=" + String[digitalRead(BUTTON)];*/
+       + "&motion=" + String[digitalRead(PIR_IN)] + "&button=" + String[digitalRead(BUTTON)]  
+       + "&MAC=" + String(WiFi.macAddress())*/
 
   /////////////// Get Request to Server ///////////////
 
-  String data = "&field1=" + String(tempC) + "&field2=" + String(humidity)
-       + "&field3=" + String(pressure) + "&field4=" + String(altitude) + 
-       "&field5=" + String(myCCS811.getCO2()) + "&field6=" + String(myCCS811.getTVOC()) +
-       "&field7=" + String(lux) + "&field8=" + String(soundLevel);
+  String data = "temperature=" + String(tempC) + "&humidity=" + String(humidity)
+       + "&pressure=" + String(pressure) + "&altitude=" + String(altitude) + 
+       "&co2=" + String(myCCS811.getCO2()) + "&voc=" + String(myCCS811.getTVOC()) +
+       "&light=" + String(lux) + "&sound=" + String(soundLevel) +
+       "&button=" + String(buttonPressed) + "&motion=" + String(digitalRead(PIR_IN)) +
+       "&MAC=" + String(WiFi.macAddress());
 
-  const char* host = "api.thingspeak.com";
-  String url = "/update?api_key=ISYE8BDU6ZCFUVC2";
-  Serial.println(host + url + data);
-  WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");
-    return;
-  }
+  
 
-  client.print(String("GET ") + url + data + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               "Connection: close\r\n\r\n");
 
-  delay(10000); //Wait for next reading
+  client.print(String("POST ")   + "/ HTTP/1.1\r\n" +  
+               "Host: " + "128.138.75.7" + "\r\n" + 
+               "User-Agent: eyeCU-IoT-Device" + "\r\n" +
+               "Accept: */*" + "\r\n" +
+               "Content-Length: " + data.length() + "\r\n" +
+               //"Connection: close" + "\r\n" + 
+               "Content-Type: application/x-www-form-urlencoded\r\n\r\n"  + data + "\n");
+
+   Serial.println(String("POST ")   + "/ HTTP/1.1\r\n" +
+               "Host: " + "128.138.75.7" + "\r\n" + 
+               "User-Agent: eyeCU-IoT-Device" + "\r\n" +
+               "Accept: */*" + "\r\n" +
+               "Content-Length: " + data.length() + "\r\n" +
+              // "Connection: close" + "\r\n" + 
+               "Content-Type: application/x-www-form-urlencoded\r\n\r\n"  + data + "\n");
+
+
+            
+  buttonPressed = 0; //Reset button status for next time around the loop
+ 
 
 }
 
@@ -283,6 +318,8 @@ void printError(byte error)
       Serial.println("unknown error");
   }
 }
+
+// IP Address of the backend server is 128.138.75.7
 
 void connectWiFi()
 {
