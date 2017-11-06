@@ -14,8 +14,8 @@
 
 boolean gain;     // Gain setting, 0 = X1, 1 = X16;
 unsigned int ms;  // Integration ("shutter") time in milliseconds
-const char ssid[] = "SOC-LAB";
-const char password[] = "REDACTED";
+const char ssid[] = "UCB Wireless";
+const char password[] = "";
 int buttonPressed = 0;
 
 CCS811 myCCS811(CCS811_ADDR);
@@ -95,6 +95,8 @@ void loop() {
 
    delay(5000); //Wait for next reading
 
+
+ //////////// Connecting to Back End /////////
   if(WiFi.status() != WL_CONNECTED){
     ESP.reset();
    
@@ -220,15 +222,9 @@ void loop() {
     Serial.println(myCCS811.getErrorRegister()); //Prints whatever CSS811 error flags are detected
   }
 
-/*format for URL will be http://IPADDRESS(which should be 128.138.75.7)/enterData/id=value&id2=value2.... like below
-   "temperature=" + String[tempC] + "&humidity=" + String[humidity]
-       + "&pressure=" + String[pressure] + "&altitude=" + String[altitude] + 
-       "&co2=" + String[myCCS811.getCO2()] + "&voc=" + String[myCCS811.getTVOC()]
-       + "&light=" + String[lux] + "&sound=" + String[soundlevel] 
-       + "&motion=" + String[digitalRead(PIR_IN)] + "&button=" + String[digitalRead(BUTTON)]  
-       + "&MAC=" + String(WiFi.macAddress())*/
 
-  /////////////// Get Request to Server ///////////////
+
+  /////////////// POST Request to Server ///////////////
 
   String data = "temperature=" + String(tempC) + "&humidity=" + String(humidity)
        + "&pressure=" + String(pressure) + "&altitude=" + String(altitude) + 
@@ -248,13 +244,13 @@ void loop() {
                //"Connection: close" + "\r\n" + 
                "Content-Type: application/x-www-form-urlencoded\r\n\r\n"  + data + "\n");
 
-   Serial.println(String("POST ")   + "/ HTTP/1.1\r\n" +
-               "Host: " + "128.138.75.7" + "\r\n" + 
-               "User-Agent: eyeCU-IoT-Device" + "\r\n" +
-               "Accept: */*" + "\r\n" +
-               "Content-Length: " + data.length() + "\r\n" +
+   // Serial.println(String("POST ")   + "/ HTTP/1.1\r\n" +
+    //           "Host: " + "128.138.75.7" + "\r\n" + 
+    //           "User-Agent: eyeCU-IoT-Device" + "\r\n" +
+    //           "Accept: */*" + "\r\n" +
+    //           "Content-Length: " + data.length() + "\r\n" +
               // "Connection: close" + "\r\n" + 
-               "Content-Type: application/x-www-form-urlencoded\r\n\r\n"  + data + "\n");
+     //          "Content-Type: application/x-www-form-urlencoded\r\n\r\n"  + data + "\n");  //sanity check on our end
 
 
             
