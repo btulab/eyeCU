@@ -30,9 +30,9 @@ def index():
 def map():
 	location_info = [{'name':'BTULab','coords':{'lat': 40.0076, 'lng': -105.2700}, 'desc': 'BTU Lab', 'id':1,}, {'name':'SOCLab', 'coords':{'lat': 40.0076, 'lng': -105.2618}, 'desc': 'SOC Lab', 'id':2}]
 	cur = db.cursor()
-	cur.execute("SELECT fname,lname,afsc FROM friends")
+	cur.execute("SELECT * FROM friends")
 	for row in cur.fetchall():
-	    print(row[0], row[1], row[2])
+	    print(row)
 	return render_template('map.html', location_info=location_info)
 
 @app.route('/login')
