@@ -8,14 +8,45 @@
 		<script>
 	      function initMap() {
 	        var CUboulder = {lat: 40.0056, lng: -105.2672};
+	        var hidePOI = [{
+	        	featureType: "poi",
+		        stylers: [
+		              { visibility: "off" }
+		        ],
+	        }]
+	        var markerIcon = {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+	          		 scale: 3,}
 	        var map = new google.maps.Map(document.getElementById('map'), {
 	          zoom: 16,
-	          center: CUboulder
+	          center: CUboulder,
+	          drag: 'none',
+	          zoomControl: false,
+	          gestureHandling: 'none',
+		      styles: hidePOI,
 	        });
-	        var marker = new google.maps.Marker({
-	          position: CUboulder,
-	          map: map
+	        var BTULab = new google.maps.Marker({
+	          position: {lat: 40.0076, lng: -105.2700},
+	          map: map,
+	          icon: markerIcon,
 	        });
+	        var BTULab_info = new google.maps.InfoWindow({
+	          content: "BTU Lab",
+	        });
+	        BTULab.addListener('click', function() {
+	          BTULab_info.open(map, BTULab);
+	        });
+	        var SOCLab = new google.maps.Marker({
+	          position: {lat: 40.0076, lng: -105.2617},
+	          map: map,
+	          icon: markerIcon,
+	        })
+	        var SOCLab_info = new google.maps.InfoWindow({
+	          content: "SOC Lab",
+	        });
+	        SOCLab.addListener('click', function() {
+	          SOCLab_info.open(map, SOCLab);
+	        });
+
 	      }
 	    </script>
 	    <script async defer
