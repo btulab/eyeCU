@@ -8,31 +8,34 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema eyedb
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema eyedb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `eyedb` DEFAULT CHARACTER SET utf8 ;
+USE `eyedb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`Device`
+-- Table `eyedb`.`Devices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Device` (
+CREATE TABLE IF NOT EXISTS `eyedb`.`Devices` (
   `deviceID` INT NOT NULL,
   `deviceType` VARCHAR(45) NULL,
   `name` VARCHAR(45) NULL,
-  `location` VARCHAR(45) NULL,
+  `descr` VARCHAR(150) NULL,
+  `lat` DOUBLE NULL,
+  `lon` DOUBLE NULL,
+  `MAC` VARCHAR(17),
   PRIMARY KEY (`deviceID`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Sensor`
+-- Table `eyedb`.`Sensor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Sensor` (
+CREATE TABLE IF NOT EXISTS `eyedb`.`Sensor` (
   `sensorID` INT NOT NULL,
   `descTemp` VARCHAR(45) NULL,
   `name` VARCHAR(45) NULL,
@@ -41,9 +44,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Data`
+-- Table `eyedb`.`Data`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Data` (
+CREATE TABLE IF NOT EXISTS `eyedb`.`Data` (
   `dataID` INT NOT NULL,
   `deviceID` INT NULL,
   `sensorID` INT NULL,
@@ -54,21 +57,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Data` (
   INDEX `sensorID_idx` (`sensorID` ASC),
   CONSTRAINT `deviceID`
     FOREIGN KEY (`deviceID`)
-    REFERENCES `mydb`.`Device` (`deviceID`)
+    REFERENCES `eyedb`.`Device` (`deviceID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `sensorID`
     FOREIGN KEY (`sensorID`)
-    REFERENCES `mydb`.`Sensor` (`sensorID`)
+    REFERENCES `eyedb`.`Sensor` (`sensorID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Users`
+-- Table `eyedb`.`Users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Users` (
+CREATE TABLE IF NOT EXISTS `eyedb`.`Users` (
   `userID` INT NOT NULL,
   `email` VARCHAR(45) NULL,
   `salt` VARCHAR(45) NULL,
@@ -78,9 +81,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Login`
+-- Table `eyedb`.`Login`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
+CREATE TABLE IF NOT EXISTS `eyedb`.`Login` (
   `loginID` INT NOT NULL,
   `IP` VARCHAR(45) NULL,
   `address` VARCHAR(45) NULL,

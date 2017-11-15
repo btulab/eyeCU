@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="col-sm-12">
+		<form method="post" action="{{ url_for('add_device') }}" class="manage_form">
+			Type: <select name="deviceType" required>
+				<option value="eyeCU-IoT-Device">eyeCU-IoT-Device</option>
+			</select><br>
+			Name: <input type="text" name="name" required><br>
+			Description:<br>
+			<textarea rows="10" cols="50" name="descr"></textarea><br>
+			Coordinates<br>
+			Lat: <input type="number" step="0.0001" name="lat" required><br>
+			Lon: <input type="number" step="0.0001" name="lon" required><br>
+			MAC: <input type="text" name="MAC" required><br>
+			<input type="submit" style="float: right;" value="Add">
+		</form>
+	</div>
+</div>
+
+{% endblock %}

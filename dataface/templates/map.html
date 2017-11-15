@@ -10,7 +10,7 @@
 	        var CUboulder = {lat: 40.0056, lng: -105.2672};
 	        var hide_features = [{featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "poi",	    elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }]}]
 	        var markerIcon = {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-	          		 scale: 3,}
+	          		 scale: 3,};
 	        var map = new google.maps.Map(document.getElementById('map'), {
 	          zoom: 16,
 	          center: CUboulder,
@@ -20,16 +20,17 @@
 		      styles: hide_features,
 	        });
 	        {% for device in location_info %}
-	        	var {{ device['name'] }} = new google.maps.Marker({
-	        		position: {lat: {{ device['coords']['lat'] }}, lng: {{ device['coords']['lng'] }} },
+	        	var {{ device['varname'] }} = new google.maps.Marker({
+	        		position: {lat: {{ device['coords']['lat'] }}, 
+	        				   lng: {{ device['coords']['lon'] }}},
 	        		map: map,
 	        		icon: markerIcon,
 		        });
-	        	var {{ device['name'] }}_info = new google.maps.InfoWindow({
-		        	content: "<div class='marker_desc'><h4>{{ device['desc'] }}</h4><hr><p>Link to data: {{ device['id'] }}<br>Other info for device.</p></div>",
+	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
+		        	content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p>Link to data: {{ device['id'] }}<br>{{ device['desc'] }}</p></div>",
 		        });
-		        {{ device['name'] }}.addListener('click', function() {
-		        	{{ device['name'] }}_info.open(map, {{ device['name'] }});
+		        {{ device['varname'] }}.addListener('click', function() {
+		        	{{ device['varname'] }}_info.open(map, {{ device['varname'] }});
 		        });
 	        {% endfor %}
 	      }
