@@ -62,10 +62,25 @@ body {
 	margin-bottom: 40px;
 }
 .map_wrapper {
-	/*pointer-events: none;*/
-	height: 70vh;
+	height: 80vh;
 	width: 100%;
 	border: 1px solid black;
 	border-radius: 5px;
 	text-align: center;
 }
+.marker_desc {
+	width: 150px;
+}
+.marker_desc > h4 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+} 
+.marker_desc > hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+} 
+.marker_desc > p {
+	text-align: left;
+	padding: 0 10px;
+	margin: 0;
+} 

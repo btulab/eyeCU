@@ -18,14 +18,14 @@
 	</h1>
 	<div class="container navigation">
 		<div class="col-sm-2">&nbsp;</div>
-		<div class="col-sm-2"><a class="navitem" href="map">Map</a></div>
+		<div class="col-sm-2"><a class="navitem" href="{{ url_for('map') }}">Map</a></div>
 		<div class="col-sm-2"><a class="navitem">Data</a></div>
 		<div class="col-sm-2"><a class="navitem">Test</a></div>
 		<div class="col-sm-2">
-		    <a class="dropdown-toggle navitem" data-toggle="dropdown" href="#">Menu 1
+		    <a class="dropdown-toggle navitem" data-toggle="dropdown" href="#">Manage
 		    <span class="caret"></span></a>
 		    <ul class="dropdown-menu">
-				<li><a href="#">Submenu 1-1</a></li>
+				<li><a href="{{ url_for('add_device') }}">Add Device</a></li>
 				<li><a href="#">Submenu 1-2</a></li>
 				<li><a href="#">Submenu 1-3</a></li>
 		    </ul>
