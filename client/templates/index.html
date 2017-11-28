@@ -1,235 +1,167 @@
-<!DOCTYPE HTML>
-<!--
-  Solid State by HTML5 UP
-  html5up.net | @ajlkn
-  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-  <head>
-    <title>eyeCU</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="static/assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="static/assets/css/main.css" />
-    <!--[if lte IE 9]><link rel="stylesheet" href="static/assets/css/ie9.css" /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href="static/assets/css/ie8.css" /><![endif]-->
-  </head>
-  <body>
+{% extends "base.html" %}
 
-    <!-- Page Wrapper -->
-    <div id="page-wrapper">
+{% block content %}
 
-      <!-- Header -->
-      <header id="header" class="alt">
-       <h1><a href="/">
-            <img src="static/images/eyeCUlogo.png" style="vertical-align:middle; height:auto; width:auto; max-height: 50px;"/>
-          </a></h1>
- 
-          <nav>
-            <a href="#menu">Menu</a>
-          </nav>
-      </header>
+<div id="page-wrapper">
+  <!-- Wrapper -->
+  <section id="wrapper">
 
-      <!-- Menu -->
-      <nav id="menu">
-        <div class="inner">
-          <h2>Menu</h2>
-          <ul class="links">
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Map</a></li>
-            <li><a href="#">Register Device</a></li>
-            <li><a href="#">Log In</a></li>
-          </ul>
-          <a href="#" class="close">Close</a>
+    <!-- One -->
+    <section id="one" class="wrapper spotlight style1">
+      <div class="inner">
+        <a href="#" class="image"><img src="static/images/pic01.jpg" alt="" /></a>
+        <div class="content">
+          <h2 class="major">Sponsored by Red Hat</h2>
+          <p>Our generous sponsor made this project possible.</p>
+          <a href="#" class="special">Learn more</a>
         </div>
-      </nav>
+      </div>
+    </section>
 
-      <!-- Banner -->
-      <section id="banner">
-        <div class="inner">
-          <!--<div class="logo"><span class="icon fa-shield"></span></div>-->
-          <h2>eyeCU
-            <div class="ralphie"><img src="static/images/eyeCUlogo.png" 
-                                      style="height: auto; width: auto; max-height: 160px; float:right; padding-bottom: 40px;"
-                                      alt="" /></div>
-
-          </h2>
-
-          <p>The Red Buffalo Network</p>
-        </div>
-      </section>
-
-      <!-- Wrapper -->
-      <section id="wrapper">
-
-        <!-- One -->
-        <section id="one" class="wrapper spotlight style1">
-          <div class="inner">
-            <a href="#" class="image"><img src="static/images/pic01.jpg" alt="" /></a>
-            <div class="content">
-              <h2 class="major">Sponsored by Red Hat</h2>
-              <p>Our generous sponsor made this project possible.</p>
-              <a href="#" class="special">Learn more</a>
-            </div>
-          </div>
-        </section>
-
-        <!-- Two -->
-        <section id="two" class="wrapper alt spotlight style2">
-          <div class="inner">
-            <a href="#" class="image"><img src="static/images/pic02.jpg" alt="" /></a>
-            <div class="content">
-              <h2 class="major">About the Project</h2>
-              <p>The primary goal of the project is to establish a secure network between IoT devices planted throughout the University of Colorado campus. Each device is equipped with various sensors as well as a WiFi interface. Data from each device is sent over to our dedicated  server located in the Security Operations Center Lab (SOC-LAB).</p>
-              <p>
-              </p>
-              <a href="#" class="special">Learn more</a>
-            </div>
-          </div>
-        </section>
-
-        <!-- Three -->
-        <section id="three" class="wrapper spotlight style3">
-          <div class="inner">
-            <a href="#" class="image"><img src="static/images/pic03.jpg" alt="" /></a>
-            <div class="content">
-              <h2 class="major">BTU LAB</h2>
-              <p>Construction of the IOT devices took place at CU's BTU Lab.</p>
-              <p>For more information regarding the BTU see the link below!</p>
-              <a href="#" class="special">Learn more</a>
-            </div>
-          </div>
-        </section>
-  <section>
-    <h2 style="text-align: center;">Sensor Locations</h2>
-    <div id="map" class="map_wrapper"></div>
-    <script>
-        function initMap() {
-          var CUboulder = {lat: 40.0056, lng: -105.2672};
-          var hide_features = [{featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "poi",      elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }]}]
-          var markerIcon = {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                 scale: 3,};
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 16,
-            center: CUboulder,
-            drag: 'none',
-            zoomControl: false,
-            gestureHandling: 'none',
-          styles: hide_features,
-          });
-          {% for device in location_info %}
-            var {{ device['varname'] }} = new google.maps.Marker({
-              position: {lat: {{ device['coords']['lat'] }}, 
-                     lng: {{ device['coords']['lon'] }}},
-              map: map,
-              icon: markerIcon,
-            });
-            var {{ device['varname'] }}_info = new google.maps.InfoWindow({
-              content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p>Link to data: {{ device['id'] }}<br>{{ device['desc'] }}</p></div>",
-            });
-            {{ device['varname'] }}.addListener('click', function() {
-              {{ device['varname'] }}_info.open(map, {{ device['varname'] }});
-            });
-          {% endfor %}
-        }
-      </script>
-      <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzubALED00XuwcKBc3nzTNtQ-QzGxk9Z0&callback=initMap">
-      </script>
-
- </section>
-
-
-        <!-- Four -->
-        <section id="four" class="wrapper alt style1">
-          <div class="inner">
-            <h2 class="major">The Red Buffalo Network</h2>
-            <p>Our network consists of 100 IOT devices carefully placed around our campus
-            as well as three separate docker containers running on our own dedicated server.
-            One docker container holds read only device information and runs this very webserver.</p>
-            
-            <section class="features">
-              <article>
-                <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
-                <h3 class="major">IoT Devices</h3>
-                <p>Not every device is the same. Here you can see the efforts the BTU group
-                and the SOC-LAB put in to monitor our campus's health.
-                </p>
-                <a href="#" class="special">Learn more</a>
-              </article>
-              <article>
-                <a href="#" class="image"><img src="static/images/pic05.jpg" alt="" /></a>
-                <h3 class="major">SOC-LAB Server</h3>
-                <p>Security is our primary focus and designing the most secure interface
-                for our network was key.
-                </p>
-                <a href="#" class="special">Learn more</a>
-              </article>
-            </section>
-            <ul class="actions">
-              <li><a href="#" class="button">Browse All</a></li>
-            </ul>
-          </div>
-        </section>
-
-      </section>
-
-      <!-- Footer -->
-      <section id="footer">
-        <div class="inner">
-          <h2 class="major">Get in touch!</h2>
+    <!-- Two -->
+    <section id="two" class="wrapper alt spotlight style2">
+      <div class="inner">
+        <a href="#" class="image"><img src="static/images/pic02.jpg" alt="" /></a>
+        <div class="content">
+          <h2 class="major">About the Project</h2>
+          <p>The primary goal of the project is to establish a secure network between IoT devices planted throughout the University of Colorado campus. Each device is equipped with various sensors as well as a WiFi interface. Data from each device is sent over to our dedicated  server located in the Security Operations Center Lab (SOC-LAB).</p>
           <p>
-          Interested in getting involved or being apart of new projects around CU?
           </p>
-          <p>
-          CU offers a countless number of exciting projects for students and grads to be apart of.
-          Contact us below for more information!
-          </p>
-          <form method="post" action="#">
-            <div class="field">
-              <label for="name">Name</label>
-              <input type="text" name="name" id="name" />
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input type="email" name="email" id="email" />
-            </div>
-            <div class="field">
-              <label for="message">Message</label>
-              <textarea name="message" id="message" rows="4"></textarea>
-            </div>
-            <ul class="actions">
-              <li><input type="submit" value="Send Message" /></li>
-            </ul>
-          </form>
-          <ul class="contact">
-            <li class="fa-home">
-              University of Colorado Boulder<br />
-              1234 Somewhere Road Suite #2894<br />
-            </li>
-            <li class="fa-phone">Joe's number: (677) 755-5555</li>
-            <li class="fa-envelope"><a href="#">eyecu@colorado.edu</a></li>
-            <li class="fa-twitter"><a href="#">twitter.com/eyeCU</a></li>
-            <li class="fa-facebook"><a href="#">facebook.com/eyeCU</a></li>
-            <li class="fa-instagram"><a href="#">instagram.com/eyeCU</a></li>
-          </ul>
-          <ul class="copyright">
-            <li>&copy; eyeCU All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-          </ul>
+          <a href="#" class="special">Learn more</a>
         </div>
-      </section>
+      </div>
+    </section>
 
+    <!-- Three -->
+    <section id="three" class="wrapper spotlight style3">
+      <div class="inner">
+        <a href="#" class="image"><img src="static/images/pic03.jpg" alt="" /></a>
+        <div class="content">
+          <h2 class="major">BTU LAB</h2>
+          <p>Construction of the IoT devices took place at CU's BTU Lab.</p>
+          <p>For more information regarding the BTU see the link below!</p>
+          <a href="#" class="special">Learn more</a>
+        </div>
+      </div>
+    </section>
+<section>
+<h2 style="text-align: center;">Sensor Locations</h2>
+<div id="map" class="map_wrapper"></div>
+<script>
+    function initMap() {
+      var CUboulder = {lat: 40.0056, lng: -105.2672};
+      var hide_features = [{featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "poi",      elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }]}]
+      var markerIcon = {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+             scale: 3,};
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: CUboulder,
+        drag: 'none',
+        zoomControl: false,
+        gestureHandling: 'none',
+      styles: hide_features,
+      });
+      {% for device in location_info %}
+        var {{ device['varname'] }} = new google.maps.Marker({
+          position: {lat: {{ device['coords']['lat'] }}, 
+                 lng: {{ device['coords']['lon'] }}},
+          map: map,
+          icon: markerIcon,
+        });
+        var {{ device['varname'] }}_info = new google.maps.InfoWindow({
+          content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p>Link to data: {{ device['id'] }}<br>{{ device['desc'] }}</p></div>",
+        });
+        {{ device['varname'] }}.addListener('click', function() {
+          {{ device['varname'] }}_info.open(map, {{ device['varname'] }});
+        });
+      {% endfor %}
+    }
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzubALED00XuwcKBc3nzTNtQ-QzGxk9Z0&callback=initMap">
+  </script>
+
+</section>
+
+
+    <!-- Four -->
+    <section id="four" class="wrapper alt style1">
+      <div class="inner">
+        <h2 class="major">The Red Buffalo Network</h2>
+        <p>Our network consists of 100 IoT devices carefully placed around our campus
+        as well as three separate docker containers running on our own dedicated server.
+        One docker container holds read only device information and runs this very webserver.</p>
+        
+        <section class="features">
+          <article>
+            <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
+            <h3 class="major">IoT Devices</h3>
+            <p>Not every device is the same. Here you can see the efforts the BTU group
+            and the SOC-LAB put in to monitor our campus's health.
+            </p>
+            <a href="#" class="special">Learn more</a>
+          </article>
+          <article>
+            <a href="#" class="image"><img src="static/images/pic05.jpg" alt="" /></a>
+            <h3 class="major">SOC-LAB Server</h3>
+            <p>Security is our primary focus and designing the most secure interface
+            for our network was key.
+            </p>
+            <a href="#" class="special">Learn more</a>
+          </article>
+        </section>
+        <ul class="actions">
+          <li><a href="#" class="button">Browse All</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- Footer -->
+  <section id="footer">
+    <div class="inner">
+      <h2 class="major">Get in touch!</h2>
+      <p>
+      Interested in getting involved or being apart of new projects around CU?
+      </p>
+      <p>
+      CU offers a countless number of exciting projects for students and grads to be apart of.
+      Contact us below for more information!
+      </p>
+      <form method="post" action="#">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" />
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea name="message" id="message" rows="4"></textarea>
+        </div>
+        <ul class="actions">
+          <li><input type="submit" value="Send Message" /></li>
+        </ul>
+      </form>
+      <ul class="contact">
+        <li class="fa-home">
+          University of Colorado Boulder<br />
+          1234 Somewhere Road Suite #2894<br />
+        </li>
+        <li class="fa-phone">Joe's number: (677) 755-5555</li>
+        <li class="fa-envelope"><a href="#">eyecu@colorado.edu</a></li>
+        <li class="fa-twitter"><a href="#">twitter.com/eyeCU</a></li>
+        <li class="fa-facebook"><a href="#">facebook.com/eyeCU</a></li>
+        <li class="fa-instagram"><a href="#">instagram.com/eyeCU</a></li>
+      </ul>
+      <ul class="copyright">
+        <li>&copy; eyeCU All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
     </div>
+  </section>
 
-    <!-- Scripts -->
-    <script src="static/assets/js/skel.min.js"></script>
-    <script src="static/assets/js/jquery.min.js"></script>
-    <script src="static/assets/js/jquery.scrollex.min.js"></script>
-    <script src="static/assets/js/util.js"></script>
-    <!--[if lte IE 8]><script src="static/assets/js/ie/respond.min.js"></script><![endif]-->
-    <script src="static/assets/js/main.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-
-  </body>
-</html>
+</div>
+{% endblock %}
