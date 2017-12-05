@@ -30,6 +30,10 @@
 	text-align: left;
 }
 
+.loginform {
+	margin-top: 35vh;
+}
+
 form {
 	width: 600px;
 	margin: auto;

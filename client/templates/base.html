@@ -9,6 +9,7 @@
     <meta charset="utf-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
 	<link rel="stylesheet" href="{{url_for('static', filename='assets/css/style.css')}}" />
+  <link rel="stylesheet" href="{{url_for('static', filename='assets/css/eyecu_style.css')}}" />
 
 {% endblock %}
 
@@ -29,9 +30,10 @@
       <h2>Menu</h2>
       <ul class="links">
         <li><a href="/">Home</a></li>
-        <li><a href="#">Map</a></li>
-        <li><a href="#">Register Device</a></li>
-        <li><a href="#">Log In</a></li>
+        <li><a href="/map">Map</a></li>
+        <li><a href="/add_device">Register Device</a></li>
+        {% if session['authenticated'] %}<li><a href="/logout">Log Out</a></li>
+        {% else %}<li><a href="/login">Log In</a></li>{% endif %}
       </ul>
       <a href="#" class="close">Close</a>
     </div>

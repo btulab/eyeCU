@@ -8,8 +8,8 @@
 	<title>eyeCU</title>
     <meta charset="utf-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
-  <link rel="stylesheet" href="{{url_for('static', filename='assets/css/eyecu_style.css')}}" />
 	<link rel="stylesheet" href="{{url_for('static', filename='assets/css/style.css')}}" />
+  <link rel="stylesheet" href="{{url_for('static', filename='assets/css/eyecu_style.css')}}" />
 
 {% endblock %}
 
@@ -32,7 +32,8 @@
         <li><a href="/">Home</a></li>
         <li><a href="/map">Map</a></li>
         <li><a href="/add_device">Register Device</a></li>
-        <li><a href="/login">Log In</a></li>
+        {% if session['authenticated'] %}<li><a href="/logout">Log Out</a></li>
+        {% else %}<li><a href="/login">Log In</a></li>{% endif %}
       </ul>
       <a href="#" class="close">Close</a>
     </div>
@@ -40,7 +41,7 @@
 
   <!-- Banner -->
   <!-- I know it sucks to have style here, but its the only way to style the banner without it being overwritten by javascript -->
-  <section id="banner" style="background-image: none; background-color: rgb(0,0,0,0); margin-top: -100px; padding: 80px 0px 0px 0px; font-size: 16px;">
+  <section id="banner" style="background-image: none; background-color: rgb(0,0,0,0); margin-top: -80px; padding: 80px 0px 0px 0px; font-size: 16px;">
     <div class="inner">
       <!--<div class="logo"><span class="icon fa-shield"></span></div>-->
       <h2>eyeCU

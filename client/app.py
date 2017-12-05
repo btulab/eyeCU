@@ -56,37 +56,52 @@ def map():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == "POST":
-		if request.form['username'] == 'eyeCU_administrator' and request.form['password'] == 'eyeTPsecurity':
-			session['logged_in'] = True
-			return index()
+		# for key in request.form:
+		# 	print(key, str(request.form[key]))
+		username = request.form["username"] or "null"
+		password = request.form["password"] or "null"
+		if str(username) == "eyeCU_administrator" and str(password) == "eyeTPsecurity":
+			session['authenticated'] = True
+			return redirect('/')
 		else:
-			return login(method="GET")
+			return render_template("login.html")
 	elif request.method == "GET":
 		return render_template("login.html")
 
+@app.route('/logout')
+def logout():
+	session['authenticated'] = False
+	return redirect('/')
+
 @app.route('/add_device', methods=['GET', 'POST'])
 def add_device():
-	if request.method == "POST":
-		cur = db.cursor()
-		deviceID = 0
-		cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
-		for row in cur.fetchall():
-			deviceID = int(row[0]) + 1
-		insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, MAC) VALUES ("
-		insert_string += str(deviceID) + ","
-		insert_string += "\"" + str(request.form['deviceType']) + "\","
-		insert_string += "\"" + str(request.form['name']) + "\","
-		insert_string += "\"" + str(request.form['descr']) + "\","
-		insert_string += str(request.form['lat']) + ","
-		insert_string += str(request.form['lon']) + ","
-		insert_string += "\"" + str(request.form['MAC']) + "\""
-		insert_string += ")"
-		print insert_string
-		cur.execute(insert_string)
-		db.commit()
-		return "Success"
-	elif request.method == "GET":
-		return render_template('display_add_device.html')
+	if session.get('authenticated'):
+		if session['authenticated']:
+			if request.method == "POST":
+				cur = db.cursor()
+				deviceID = 0
+				cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
+				for row in cur.fetchall():
+					deviceID = int(row[0]) + 1
+				insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, MAC) VALUES ("
+				insert_string += str(deviceID) + ","
+				insert_string += "\"" + str(request.form['deviceType']) + "\","
+				insert_string += "\"" + str(request.form['name']) + "\","
+				insert_string += "\"" + str(request.form['descr']) + "\","
+				insert_string += str(request.form['lat']) + ","
+				insert_string += str(request.form['lon']) + ","
+				insert_string += "\"" + str(request.form['MAC']) + "\""
+				insert_string += ")"
+				print insert_string
+				cur.execute(insert_string)
+				db.commit()
+				return "Success"
+			elif request.method == "GET":
+				return render_template('display_add_device.html')
+		else:
+			return redirect('/login')
+	else:
+		return redirect('/login')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
