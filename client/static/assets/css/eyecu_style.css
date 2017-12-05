@@ -1,0 +1,55 @@
+
+.map_wrapper {
+	height: 75vh;
+	width: 100%;
+	border: 1px solid black;
+	border-radius: 5px;
+	text-align: center;
+	max-width: 80vw;
+	margin:auto;
+	top: -40px;
+}
+
+.marker_desc {
+	color: black;
+}
+
+.marker_desc > h4 {
+	font-size: 20px;
+	color: black;
+	margin: 0px;
+}
+
+.marker_desc > hr {
+	color: black;
+	margin: 5px 0px 15px 0px;
+	border-bottom: 1px solid;
+}
+
+.marker_desc > p {
+	text-align: left;
+}
+
+form {
+	width: 600px;
+	margin: auto;
+	margin-bottom: 10px;
+	padding: 25px;
+	padding-bottom: 10px;
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.75);
+	border: 1px solid black;
+}
+
+form > textarea {
+	resize: none;
+}
+
+form > div {
+	text-align: right;
+}
+
+form > h2 {
+	text-align: center;
+}
+

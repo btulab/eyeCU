@@ -1,0 +1,25 @@
+{% extends "subpage_base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="col-sm-12">
+		<form method="post" action="{{ url_for('add_device') }}" class="manage_form">
+			<h2>Add A Device</h2>
+			Type: <select name="deviceType" required>
+				<option value="eyeCU-IoT-Device">eyeCU-IoT-Device</option>
+			</select><br>
+			Name: <input type="text" name="name" required><br>
+			Description:<br>
+			<textarea rows="3" cols="50" name="descr" placeholder="Give a brief description of the device's location.                                                             (150 characters or less)"></textarea><br>
+			Coordinates <i>(default is center of map)</i><br>
+			Lat: <input type="text" name="lat" value="40.0056" required><br>
+			Lon: <input type="text" name="lon" value="-105.2672" required><br>
+			MAC: <input type="text" name="MAC" placeholder="XX:XX:XX:XX:XX:XX" required><br>
+			<div>
+				<input type="submit" value="Add">
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

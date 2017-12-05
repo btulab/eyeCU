@@ -1,0 +1,70 @@
+{% block head %}
+
+	<!--
+	  Solid State by HTML5 UP
+	  html5up.net | @ajlkn
+	  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	-->
+	<title>eyeCU</title>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
+  <link rel="stylesheet" href="{{url_for('static', filename='assets/css/eyecu_style.css')}}" />
+	<link rel="stylesheet" href="{{url_for('static', filename='assets/css/style.css')}}" />
+
+{% endblock %}
+
+{% block header %}
+<header id="header" class="alt">
+   <h1><a href="/">
+        <img src="static/images/eyeCUlogo.png" style="vertical-align:middle; height:auto; width:auto; max-height: 50px;"/>
+      </a></h1>
+
+      <nav> 
+        <a href="#menu">Menu</a>
+      </nav>
+  </header>
+
+  <!-- Menu -->
+  <nav id="menu">
+    <div class="inner">
+      <h2>Menu</h2>
+      <ul class="links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/map">Map</a></li>
+        <li><a href="/add_device">Register Device</a></li>
+        <li><a href="/login">Log In</a></li>
+      </ul>
+      <a href="#" class="close">Close</a>
+    </div>
+  </nav>
+
+  <!-- Banner -->
+  <!-- I know it sucks to have style here, but its the only way to style the banner without it being overwritten by javascript -->
+  <section id="banner" style="background-image: none; background-color: rgb(0,0,0,0); margin-top: -100px; padding: 80px 0px 0px 0px; font-size: 16px;">
+    <div class="inner">
+      <!--<div class="logo"><span class="icon fa-shield"></span></div>-->
+      <h2>eyeCU
+        <div class="ralphie"><img src="static/images/eyeCUlogo.png" 
+                                  style="height: auto; width: auto; max-height: 160px; float:right; padding-bottom: 40px;"
+                                  alt="" /></div>
+
+      </h2>
+
+      <p>The Red Buffalo Network</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block footer %}
+
+	<!-- Scripts -->
+	<script src="static/assets/js/skel.min.js"></script>
+	<script src="static/assets/js/jquery.min.js"></script>
+	<script src="static/assets/js/jquery.scrollex.min.js"></script>
+	<script src="static/assets/js/util.js"></script>
+	<script src="static/assets/js/main.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{% endblock %}

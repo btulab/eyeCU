@@ -3865,14 +3865,3 @@
 		}
 
 	}
-
-  .map_wrapper {
-  height: 80vh;
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 5px;
-  text-align: center;
-  max-width: 70vw;
-  margin:auto;
-}
-
