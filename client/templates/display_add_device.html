@@ -1,7 +1,7 @@
 {% extends "subpage_base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="padding-top:130px;">
 	<div class="col-sm-12">
 		<form method="post" action="{{ url_for('add_device') }}" class="manage_form">
 			<h2>Add A Device</h2>
@@ -21,5 +21,6 @@
 		</form>
 	</div>
 </div>
+<div id="snow" style="z-index: -1;"></div>
 
 {% endblock %}
