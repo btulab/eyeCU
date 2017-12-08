@@ -8,6 +8,8 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
+version = '0.3.1'
+
 # Bootstrap(app)
 
 dbcreds = configparser.ConfigParser()
@@ -36,6 +38,7 @@ def index():
 			print("  " + str(key) + " - " + str(request.form[key]))
 		return "Success!"
 	else:
+		session['version'] = version
 		return render_template('index.html')
 
 @app.route('/map')
@@ -55,19 +58,19 @@ def map():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if request.method == "POST":
+        if request.method == "POST":
 		# for key in request.form:
 		# 	print(key, str(request.form[key]))
-		username = request.form["username"] or "null"
-		password = request.form["password"] or "null"
-		if str(username) == "eyeCU_administrator" and str(password) == "eyeTPsecurity":
-			session['authenticated'] = True
-			session['username'] = username
-			return redirect('/')
-		else:
-			return render_template("login.html")
-	elif request.method == "GET":
-		return render_template("login.html")
+                username = request.form["username"] or "null"
+                password = request.form["password"] or "null"
+                if str(username) == "eyeCU_administrator" and str(password) == "eyeTPsecurity":
+                    session['authenticated'] = True
+                    session['username'] = username
+                    return redirect('/')
+                else:
+                    return render_template("login.html")
+        elif request.method == "GET":
+            return render_template("login.html")
 
 @app.route('/logout')
 def logout():
