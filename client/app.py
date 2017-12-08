@@ -62,6 +62,7 @@ def login():
 		password = request.form["password"] or "null"
 		if str(username) == "eyeCU_administrator" and str(password) == "eyeTPsecurity":
 			session['authenticated'] = True
+			session['username'] = username
 			return redirect('/')
 		else:
 			return render_template("login.html")

@@ -20,6 +20,10 @@
       </a></h1>
 
       <nav> 
+
+        {% if session['authenticated'] %}<a href="#">{{ session['username'] }}</a>
+        {% endif %}
+
         <a href="#menu">Menu</a>
       </nav>
   </header>
