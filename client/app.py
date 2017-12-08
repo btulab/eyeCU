@@ -3,14 +3,14 @@ from flask import Flask, render_template, request, redirect, session
 import flask_login
 import time
 import MySQLdb
-import ConfigParser
+import configparser
 import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 # Bootstrap(app)
 
-dbcreds = ConfigParser.ConfigParser()
+dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
 db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
@@ -92,7 +92,7 @@ def add_device():
 				insert_string += str(request.form['lon']) + ","
 				insert_string += "\"" + str(request.form['MAC']) + "\""
 				insert_string += ")"
-				print insert_string
+				print(insert_string)
 				cur.execute(insert_string)
 				db.commit()
 				return "Success"
