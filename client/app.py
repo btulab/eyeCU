@@ -45,7 +45,7 @@ def index():
 
 					else:
 						return "Key Error"
-						
+
 				cur = db.cursor()
 				print("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
@@ -72,6 +72,10 @@ def map():
 	    	'desc':row[2]
 	    })
 	return render_template('map.html', location_info=location_info)
+
+@app.route('/device/<device_to_display>')
+def device(device_to_display):
+	return render_template('display_device.html', device=device_to_display)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

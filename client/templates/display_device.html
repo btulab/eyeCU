@@ -3,7 +3,8 @@
 {% block content %}
 <div class="container">
 	<div class="col-sm-12">
-		<div id="map" class="map_wrapper"></div>
+		<h1>{{ device }}</h1>
+		<!-- <div id="map" class="map_wrapper"></div>
 		<script>
 	      function initMap() {
 	        var CUboulder = {lat: 40.0056, lng: -105.2672};
@@ -26,7 +27,7 @@
 	        		icon: markerIcon,
 		        });
 	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
-		        	content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p><a href='{{ url_for('device', device_to_display=device['varname']) }}'>Link to data</a><br>{{ device['desc'] }}</p></div>",
+		        	content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p><a href=\"/devices/\"{{ device['varname'] }}>Link to data</a><br>{{ device['desc'] }}</p></div>",
 		        });
 		        {{ device['varname'] }}.addListener('click', function() {
 		        	{{ device['varname'] }}_info.open(map, {{ device['varname'] }});
@@ -36,7 +37,7 @@
 	    </script>
 	    <script async defer
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzubALED00XuwcKBc3nzTNtQ-QzGxk9Z0&callback=initMap">
-	    </script>
+	    </script> -->
 	</div>
 </div>
 {% endblock %}
