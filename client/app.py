@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.3.1'
+version = '0.3.4'
 
 # Bootstrap(app)
 
@@ -19,24 +19,41 @@ db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      passwd=dbcreds.get('database', 'passwd'),
                      db=dbcreds.get('database', 'db'))
 
-last_update_dict = {"5C:CF:7F:AE:D9:65": 0} #used to store the last update recieved from a device
+last_update_dict = {"5C:CF:7F:AE:D9:65": 0, "AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
+valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	if request.method == "POST":
 		if request.form['MAC'] in last_update_dict:
+			print(last_update_dict[request.form['MAC']])
 			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
 				last_update_dict[request.form['MAC']] = time.time()
-				print(last_update_dict)
+				insert_string_variables = ["deviceID", "timeRecieved"]
+				insert_string_values = ["0", str(last_update_dict[request.form['MAC']])]	##TODO - get dev ID dynamically
+				print("--- POST FROM " + str(request.headers.get('User-Agent')) + " ---" + time.strftime("%H:%M:%S"))
+				for key in request.form:
+					print("  " + str(key) + " - " + str(request.form[key]))
+					if str(key) in valid_keys:
+						insert_string_variables.append(str(key))
+						if str(key) == "MAC":
+							insert_string_values.append('"' + str(request.form[key]) + '"')
+						else:
+							insert_string_values.append(str(request.form[key]))
+
+					else:
+						return "Key Error"
+						
+				cur = db.cursor()
+				print("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
+				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
+				db.commit()
+
+				return "Success!"
 		else:
 			return "Could not verify MAC."
-
-		print("--- POST FROM " + str(request.headers.get('User-Agent')) + " ---" + time.strftime("%H:%M:%S"))
-		for key in request.form:
-			print("  " + str(key) + " - " + str(request.form[key]))
-		return "Success!"
 	else:
 		session['version'] = version
 		return render_template('index.html')

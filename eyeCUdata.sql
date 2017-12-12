@@ -33,36 +33,27 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `eyedb`.`Sensor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `eyedb`.`Sensor` (
-  `sensorID` INT NOT NULL,
-  `descTemp` VARCHAR(45) NULL,
-  `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`sensorID`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `eyedb`.`Data`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `eyedb`.`Data` (
-  `dataID` INT NOT NULL,
-  `deviceID` INT NULL,
-  `sensorID` INT NULL,
-  `value` VARCHAR(45) NULL,
-  `timeRecieved` DATETIME NULL,
-  PRIMARY KEY (`dataID`),
-  INDEX `deviceID_idx` (`deviceID` ASC),
-  INDEX `sensorID_idx` (`sensorID` ASC),
+  `deviceID` INT NOT NULL,
+  `timeRecieved` INT NOT NULL,
+  `light` DOUBLE NULL,
+  `motion` BOOLEAN NULL,
+  `pressure` DOUBLE NULL,
+  `temperature` DOUBLE NULL,
+  `humidity` DOUBLE NULL,
+  `co2` INT NULL,
+  `button` BOOLEAN NULL,
+  `altitude` DOUBLE NULL,
+  `voc` INT NULL,
+  `sound` INT NULL,
+  `MAC` VARCHAR(17) NOT NULL,
+
+  PRIMARY KEY (`MAC`,`timeRecieved`),
   CONSTRAINT `deviceID`
     FOREIGN KEY (`deviceID`)
-    REFERENCES `eyedb`.`Device` (`deviceID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `sensorID`
-    FOREIGN KEY (`sensorID`)
-    REFERENCES `eyedb`.`Sensor` (`sensorID`)
+    REFERENCES `eyedb`.`Devices` (`deviceID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
