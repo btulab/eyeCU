@@ -60,7 +60,7 @@ form > h2 {
 #snow{
 	background: none;
 	font-family: Androgyne;
-	background-image: url('http://www.wearewebstars.dk/codepen/img/s1.png'), url('http://www.wearewebstars.dk/codepen/img//s2.png'), url('http://www.wearewebstars.dk/codepen/img//s3.png');
+	background-image: url('../../images/snow.jpg');
 	height: 100%;
 	left: 0;
 	position: absolute;
@@ -72,7 +72,7 @@ form > h2 {
 	animation: snow 10s linear infinite;
   z-index: 0;
   position: fixed;
-  opacity: .25;
+  opacity: .08;
 
 }
 @keyframes snow {
