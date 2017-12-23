@@ -9,10 +9,9 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.3.7'
+version = '0.3.8'
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
-salt = dbcreds.get('database', 'salt')
 db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
                      passwd=dbcreds.get('database', 'passwd'),
@@ -87,15 +86,17 @@ def login():
                 cur = db.cursor()
                 cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
                 if cur.fetchone()[0]:
-                    password = password + salt
+                    cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
+                    salt = cur.fetchall()
+                    password = password + salt[0][0]
                     cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
-                    for row in cur.fetchall():
-                        if pbkdf2_sha256.verify(password, row[0]):
-                            session['authenticated'] = True
-                            session['username'] = username
-                            return redirect('/')
-                        else:
-                            return render_template("login.html")
+                    passhash = cur.fetchall()
+                    if pbkdf2_sha256.verify(password, passhash[0][0]):
+                        session['authenticated'] = True
+                        session['username'] = username
+                        return redirect('/')
+                    else:
+                        return render_template("login.html")
                 else:
                     return(render_template("login.html"))
                         

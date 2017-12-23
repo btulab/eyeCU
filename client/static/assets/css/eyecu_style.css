@@ -72,7 +72,7 @@ form > h2 {
 	animation: snow 10s linear infinite;
   z-index: 0;
   position: fixed;
-  opacity: .08;
+  opacity: .04;
 
 }
 @keyframes snow {
