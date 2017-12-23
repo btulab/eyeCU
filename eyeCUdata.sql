@@ -63,10 +63,10 @@ ENGINE = InnoDB;
 -- Table `eyedb`.`Users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `eyedb`.`Users` (
-  `userID` INT NOT NULL,
+  `userID` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NULL,
   `salt` VARCHAR(45) NULL,
-  `password` VARCHAR(45) NULL,
+  `hash` VARCHAR(88) NULL,
   PRIMARY KEY (`userID`))
 ENGINE = InnoDB;
 

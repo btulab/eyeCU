@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
-# from flask_bootstrap import Bootstrap
+from passlib.hash import pbkdf2_sha256
+
 import flask_login
 import time
 import MySQLdb
@@ -8,16 +9,15 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.3.4'
-
-# Bootstrap(app)
-
+version = '0.3.7'
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
+salt = dbcreds.get('database', 'salt')
 db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
                      passwd=dbcreds.get('database', 'passwd'),
                      db=dbcreds.get('database', 'db'))
+
 
 last_update_dict = {"5C:CF:7F:AE:D9:65": 0, "AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
@@ -80,16 +80,25 @@ def device(device_to_display):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
         if request.method == "POST":
-		# for key in request.form:
-		# 	print(key, str(request.form[key]))
+
                 username = request.form["username"] or "null"
                 password = request.form["password"] or "null"
-                if str(username) == "eyeCU_administrator" and str(password) == "eyeTPsecurity":
-                    session['authenticated'] = True
-                    session['username'] = username
-                    return redirect('/')
+
+                cur = db.cursor()
+                cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
+                if cur.fetchone()[0]:
+                    password = password + salt
+                    cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
+                    for row in cur.fetchall():
+                        if pbkdf2_sha256.verify(password, row[0]):
+                            session['authenticated'] = True
+                            session['username'] = username
+                            return redirect('/')
+                        else:
+                            return render_template("login.html")
                 else:
-                    return render_template("login.html")
+                    return(render_template("login.html"))
+                        
         elif request.method == "GET":
             return render_template("login.html")
 
