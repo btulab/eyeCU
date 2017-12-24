@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import pbkdf2_sha256
 
 import flask_login
@@ -132,7 +132,8 @@ def add_device():
 				print(insert_string)
 				cur.execute(insert_string)
 				db.commit()
-				return "Success"
+				flash("Device Succesffuly Added")
+				return render_template("display_add_device.html")
 			elif request.method == "GET":
 				return render_template('display_add_device.html')
 		else:
