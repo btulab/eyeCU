@@ -96,9 +96,11 @@ def login():
                         session['username'] = username
                         return redirect('/')
                     else:
-                        return render_template("login.html")
+                        error = "Incorrect username or password!"
+                        return render_template("login.html", error=error)
                 else:
-                    return(render_template("login.html"))
+                    error = "Incorrect username or password!"
+                    return render_template("login.html", error=error)
                         
         elif request.method == "GET":
             return render_template("login.html")

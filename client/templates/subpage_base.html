@@ -47,7 +47,19 @@
   <!-- I know it sucks to have style here, but its the only way to style the banner without it being overwritten by javascript -->
   <section id="banner" style="background-image: none; background-color: rgb(0,0,0,0); margin-top: -80px; padding: 80px 0px 0px 0px; font-size: 16px;">
   </section>
+
 {% endblock %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
 
 {% block content %}{% endblock %}
 
