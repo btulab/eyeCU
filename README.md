@@ -24,7 +24,7 @@ db = eyedb
 MySQL Container
 ```
 $ sudo docker run -d --name=eyecu-mysql --env="MYSQL_ROOT_PASSWORD=mypass" mysql
-$ mysql -uroot -pmypass -h 172.17.0.2 < eyeCUdata.sql
+$ mysql -uroot -pmypass -h 172.17.0.2 < info/eyeCUdata.sql
 ```
 
 Nginx Container
