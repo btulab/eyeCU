@@ -143,5 +143,13 @@ def add_device():
 	else:
 		return redirect('/login')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/redhat')
+def redhat():
+    return render_template('redhat.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
