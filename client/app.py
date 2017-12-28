@@ -9,13 +9,15 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.3.8'
+version = '0.4.1'
+
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
 db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
                      passwd=dbcreds.get('database', 'passwd'),
                      db=dbcreds.get('database', 'db'))
+
 
 
 last_update_dict = {"5C:CF:7F:AE:D9:65": 0, "AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
