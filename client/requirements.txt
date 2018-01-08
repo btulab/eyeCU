@@ -2,3 +2,5 @@ passlib
 mysqlclient
 configparser
 flask_login
+flask-wtf
+flask_mail

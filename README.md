@@ -18,6 +18,14 @@ host = 172.17.0.2
 user = root
 passwd = mypass
 db = eyedb
+
+[mail]
+server = smtp.gmail.com
+port = 465
+ssl = True
+username = eyecuexample@gmail.com
+password = reallylongpassword
+
 " > client/db.cfg
 ```
 
@@ -35,5 +43,6 @@ $ sudo docker run -d -p 80:5000 --link eyecu-mysql --name=eyecu-nginx eyecu-ngin
 
 Create a user account
 ```
-$ python client/auth.py username password
+$ cd client
+$ python auth.py username password
 ```

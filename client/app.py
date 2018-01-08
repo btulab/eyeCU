@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import pbkdf2_sha256
+from forms import ContactForm
+from flask_mail import Mail, Message
 
 import flask_login
 import time
@@ -13,11 +15,21 @@ version = '0.4.1'
 
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
+
+
 db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
                      passwd=dbcreds.get('database', 'passwd'),
                      db=dbcreds.get('database', 'db'))
 
+mail = Mail()
+app.config["MAIL_SERVER"] = dbcreds.get('mail', 'server')
+app.config["MAIL_PORT"] = dbcreds.get('mail', 'port')
+app.config["MAIL_USE_SSL"] = dbcreds.get('mail', 'ssl')
+app.config["MAIL_USERNAME"] = dbcreds.get('mail', 'username')
+app.config["MAIL_PASSWORD"] = dbcreds.get('mail', 'password')
+
+mail.init_app(app)
 
 
 last_update_dict = {"5C:CF:7F:AE:D9:65": 0, "AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
@@ -57,7 +69,7 @@ def index():
 			return "Could not verify MAC."
 	else:
 		session['version'] = version
-		return render_template('index.html')
+		return render_template('index.html', form=ContactForm())
 
 @app.route('/map')
 def map():
@@ -142,6 +154,19 @@ def add_device():
 			return redirect('/login')
 	else:
 		return redirect('/login')
+
+@app.route('/contact', methods=['POST'])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        msg = Message(form.subject.data, sender='contact@eyecu.colorado.edu', recipients=['ryan.m.bohannon@gmail.com'])
+        msg.bodt = """
+        From: %s &lt;%s&gt;
+        %s
+        """ % (form.name.data, form.email.data, form.message.data)
+        mail.send(msg)
+
+    return render_template('index.html', form=form)
 
 @app.route('/about')
 def about():

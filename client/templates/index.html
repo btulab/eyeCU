@@ -91,18 +91,23 @@
       CU offers a countless number of exciting projects for students and grads to be apart of.
       Contact us below for more information!
       </p>
-      <form method="post" action="#">
+      <form method="post" action="{{ url_for('contact') }}">
+        {{ form.hidden_tag() }}
         <div class="field">
           <label for="name">Name</label>
-          <input type="text" name="name" id="name" />
+          {{ form.name }}
         </div>
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" name="email" id="email" />
+          {{ form.email }}
+        </div>
+        <div class="field">
+          <label for="subject">Subject</label>
+          {{ form.subject }}
         </div>
         <div class="field">
           <label for="message">Message</label>
-          <textarea name="message" id="message" rows="4"></textarea>
+          {{ form.message }}
         </div>
         <ul class="actions">
           <li><input type="submit" value="Send Message" /></li>
