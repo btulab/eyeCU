@@ -159,12 +159,15 @@ def add_device():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        msg = Message(form.subject.data, sender='contact@eyecu.colorado.edu', recipients=['ryan.m.bohannon@gmail.com'])
-        msg.bodt = """
-        From: %s &lt;%s&gt;
-        %s
-        """ % (form.name.data, form.email.data, form.message.data)
-        mail.send(msg)
+        try:
+            msg = Message(form.subject.data, sender='contact@eyecu.colorado.edu', recipients=['ryan.m.bohannon@gmail.com'])
+            msg.bodt = """
+            From: %s &lt;%s&gt;
+            %s
+            """ % (form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+        except:
+            pass
 
     return render_template('index.html', form=form)
 
@@ -175,6 +178,7 @@ def about():
 @app.route('/redhat')
 def redhat():
     return render_template('redhat.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
