@@ -175,9 +175,15 @@ def contact():
 def about():
     return render_template('about.html')
 
-@app.route('/redhat')
-def redhat():
-    return render_template('redhat.html')
+@app.route('/iot')
+def iot():
+    return render_template('iot.html')
+
+@app.route('/backend')
+def backend():
+    return render_template('backend.html')
+
+
 
 
 if __name__ == '__main__':
