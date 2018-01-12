@@ -1,0 +1,10 @@
+version: '2'
+services:
+  web:
+    restart: always
+    build: ./
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSSORD: permutations
