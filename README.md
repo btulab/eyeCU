@@ -29,16 +29,17 @@ password = reallylongpassword
 " > client/db.cfg
 ```
 
-MySQL Container
+MySQL/MariaDB Container
 ```
-$ sudo docker run -d --name=eyecu-mysql --env="MYSQL_ROOT_PASSWORD=mypass" mysql
-$ mysql -uroot -pmypass -h 172.17.0.2 < info/eyeCUdata.sql
+$ docker pull mariadb:latest
+$ docker run -d --name=eyecu-mariadb --env="MYSQL_ROOT_PASSWORD=mypass" mariadb
+$ mysql -uroot -pmypass -h 172.17.0.2 < mariadb/eyeCUdata.sql
 ```
 
 Nginx Container
 ```
 $ sudo docker build -t eyecu-nginx:latest .
-$ sudo docker run -d -p 80:5000 --link eyecu-mysql --name=eyecu-nginx eyecu-nginx
+$ sudo docker run -d -p 80:5000 --link eyecu-mariadb:mariadb --name=eyecu-client eyecu-nginx
 ```
 
 Create a user account
