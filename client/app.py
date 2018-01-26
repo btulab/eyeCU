@@ -33,7 +33,11 @@ mail.init_app(app)
 
 
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
-#TODO -- update this dict from database on startup
+cur = db.cursor()
+cur.execute("SELECT MAC FROM Devices")
+for row in cur.fetchall():
+    last_update_dict[row[0]] = 0
+
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
 @app.route('/', methods=['GET', 'POST'])
@@ -147,6 +151,7 @@ def add_device():
 				print(insert_string)
 				cur.execute(insert_string)
 				db.commit()
+				last_update_dict[request.form['MAC']] = time.time()
 				flash("Device Succesffuly Added")
 				return render_template("display_add_device.html")
 			elif request.method == "GET":
