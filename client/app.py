@@ -32,7 +32,8 @@ app.config["MAIL_PASSWORD"] = dbcreds.get('mail', 'password')
 mail.init_app(app)
 
 
-last_update_dict = {"5C:CF:7F:AE:D9:65": 0, "AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
+last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
+#TODO -- update this dict from database on startup
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
 @app.route('/', methods=['GET', 'POST'])
