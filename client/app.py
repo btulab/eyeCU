@@ -151,7 +151,7 @@ def add_device():
 				print(insert_string)
 				cur.execute(insert_string)
 				db.commit()
-				last_update_dict[request.form['MAC']] = time.time()
+				last_update_dict[request.form['MAC']] = 0
 				flash("Device Succesffuly Added")
 				return render_template("display_add_device.html")
 			elif request.method == "GET":
