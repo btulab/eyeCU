@@ -11,7 +11,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.4.1'
+version = '0.4.2'
 
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
@@ -78,18 +78,24 @@ def index():
 
 @app.route('/map')
 def map():
-	location_info = []
-	cur = db.cursor()
-	cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
-	for row in cur.fetchall():
-	    location_info.append({
-	    	'id':row[0],
-	    	'name':row[1], 
-	    	'varname':row[1].replace(' ', '_'), 
-	    	'coords':{'lat':row[3], 'lon':row[4]}, 
-	    	'desc':row[2]
-	    })
-	return render_template('map.html', location_info=location_info)
+    location_info = []
+    try: 
+        cur = db.cursor()
+        cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
+        for row in cur.fetchall():
+            location_info.append({
+                'id':row[0],
+                'name':row[1], 
+                'varname':row[1].replace(' ', '_'), 
+                'coords':{'lat':row[3], 'lon':row[4]}, 
+                'desc':row[2]
+	        })
+        
+    except:
+        print("Error pulling data from mariadb")
+
+
+    return render_template('map.html', location_info=location_info)
 
 @app.route('/device/<device_to_display>')
 def device(device_to_display):
@@ -97,32 +103,37 @@ def device(device_to_display):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-        if request.method == "POST":
+    if request.method == "POST":
+        username = request.form["username"] or "null"
+        password = request.form["password"] or "null"
 
-                username = request.form["username"] or "null"
-                password = request.form["password"] or "null"
-
-                cur = db.cursor()
-                cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
-                if cur.fetchone()[0]:
-                    cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
-                    salt = cur.fetchall()
-                    password = password + salt[0][0]
-                    cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
-                    passhash = cur.fetchall()
-                    if pbkdf2_sha256.verify(password, passhash[0][0]):
-                        session['authenticated'] = True
-                        session['username'] = username
-                        return redirect('/')
-                    else:
-                        error = "Incorrect username or password!"
-                        return render_template("login.html", error=error)
+        try:
+            cur = db.cursor()
+            cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
+            if cur.fetchone()[0]:
+                cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
+                salt = cur.fetchall()
+                password = password + salt[0][0]
+                cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
+                passhash = cur.fetchall()
+                if pbkdf2_sha256.verify(password, passhash[0][0]):
+                    session['authenticated'] = True
+                    session['username'] = username
+                    return redirect('/')
                 else:
                     error = "Incorrect username or password!"
                     return render_template("login.html", error=error)
-                        
-        elif request.method == "GET":
-            return render_template("login.html")
+            else:
+                error = "Incorrect username or password!"
+                return render_template("login.html", error=error)
+
+        except:
+            print("Error accessing database.")
+            error = "Our server is experiencing issues processing your request."
+            return render_template("login.html", error=error)
+                
+    elif request.method == "GET":
+        return render_template("login.html")
 
 @app.route('/logout')
 def logout():
