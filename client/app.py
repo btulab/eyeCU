@@ -11,16 +11,20 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.4.2'
+version = '0.4.3'
 
 dbcreds = configparser.ConfigParser()
 dbcreds.read('db.cfg')
 
 
-db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
+def connection():
+    db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
                      user=dbcreds.get('database', 'user'),
                      passwd=dbcreds.get('database', 'passwd'),
                      db=dbcreds.get('database', 'db'))
+
+    cur = db.cursor()
+    return db, cur
 
 mail = Mail()
 app.config["MAIL_SERVER"] = dbcreds.get('mail', 'server')
@@ -33,12 +37,14 @@ mail.init_app(app)
 
 
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
-cur = db.cursor()
+
+db, cur = connection()
 cur.execute("SELECT MAC FROM Devices")
 for row in cur.fetchall():
     last_update_dict[row[0]] = 0
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
+cur.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -80,7 +86,7 @@ def index():
 def map():
     location_info = []
     try: 
-        cur = db.cursor()
+        db, cur = connection()
         cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
         for row in cur.fetchall():
             location_info.append({
@@ -108,7 +114,7 @@ def login():
         password = request.form["password"] or "null"
 
         try:
-            cur = db.cursor()
+            db, cur = connection()
             cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
             if cur.fetchone()[0]:
                 cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
@@ -145,7 +151,7 @@ def add_device():
 	if session.get('authenticated'):
 		if session['authenticated']:
 			if request.method == "POST":
-				cur = db.cursor()
+				db, cur = connection()
 				deviceID = 0
 				cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
 				for row in cur.fetchall():
