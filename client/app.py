@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import pbkdf2_sha256
 from forms import ContactForm
 from flask_mail import Mail, Message
+from db import connection
 
 import flask_login
 import time
@@ -12,29 +13,6 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 version = '0.4.3'
-
-dbcreds = configparser.ConfigParser()
-dbcreds.read('db.cfg')
-
-
-def connection():
-    db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
-                     user=dbcreds.get('database', 'user'),
-                     passwd=dbcreds.get('database', 'passwd'),
-                     db=dbcreds.get('database', 'db'))
-
-    cur = db.cursor()
-    return db, cur
-
-mail = Mail()
-app.config["MAIL_SERVER"] = dbcreds.get('mail', 'server')
-app.config["MAIL_PORT"] = dbcreds.get('mail', 'port')
-app.config["MAIL_USE_SSL"] = dbcreds.get('mail', 'ssl')
-app.config["MAIL_USERNAME"] = dbcreds.get('mail', 'username')
-app.config["MAIL_PASSWORD"] = dbcreds.get('mail', 'password')
-
-mail.init_app(app)
-
 
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 
@@ -180,19 +158,7 @@ def add_device():
 
 @app.route('/contact', methods=['POST'])
 def contact():
-    form = ContactForm()
-    if form.validate_on_submit():
-        try:
-            msg = Message(form.subject.data, sender='contact@eyecu.colorado.edu', recipients=['ryan.m.bohannon@gmail.com'])
-            msg.bodt = """
-            From: %s &lt;%s&gt;
-            %s
-            """ % (form.name.data, form.email.data, form.message.data)
-            mail.send(msg)
-        except:
-            pass
-
-    return render_template('index.html', form=form)
+    return render_template('index.html')
 
 @app.route('/about')
 def about():
@@ -205,8 +171,6 @@ def iot():
 @app.route('/backend')
 def backend():
     return render_template('backend.html')
-
-
 
 
 if __name__ == '__main__':

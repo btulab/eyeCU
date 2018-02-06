@@ -1,14 +1,8 @@
 from passlib.hash import pbkdf2_sha256
+from db import connection
 import configparser
 import MySQLdb
 import string, random, sys
-
-dbcreds = configparser.ConfigParser()
-dbcreds.read('db.cfg')
-db = MySQLdb.connect(host=dbcreds.get('database', 'host'),
-                     user=dbcreds.get('database', 'user'),
-                     passwd=dbcreds.get('database', 'passwd'),
-                     db=dbcreds.get('database', 'db'))
 
 def createUser(username, password):
 
