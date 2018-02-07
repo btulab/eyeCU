@@ -4,6 +4,7 @@ workdir="/data/eyeCU"
 
 cd $workdir
 echo "Checking for updates..."
+git remote update
 status=$(git status -uno | grep up-to-date)
 
 if [[ -n "${status// }" && $1 != "-f" ]]
