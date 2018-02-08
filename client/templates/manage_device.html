@@ -1,0 +1,27 @@
+{% extends "subpage_base.html" %}
+
+{% block content %}
+<div class="container">
+	<div style="margin:auto; width: 80%;">
+		<form method="post" action="/manage_device/{{ device_info['deviceID'] }}" class="manage_form">
+			<h1 style="float: right;">Edit Device</h1>
+			<h1>{{ device_info['name'] }}</h1>
+			Type: <select name="deviceType" required>
+				<option value="eyeCU-IoT-Device">eyeCU-IoT-Device</option>
+			</select><br>
+			Name: <input type="text" name="name" value="{{ device_info['name'] }}" required></input><br>
+			Description:<br>
+			<textarea rows="3" cols="50" name="descr">{{ device_info['descr'] }}</textarea><br>
+			Coordinates<br>
+			Lat: <input type="text" name="lat" value="{{ device_info['coords']['lat'] }}" required><br>
+			Lon: <input type="text" name="lon" value="{{ device_info['coords']['lon'] }}" required><br>
+			MAC: <input type="text" name="MAC" value="{{ device_info['MAC'] }}" required><br>
+			Confirm: <input type="checkbox" name="confirm" required></input>
+			<div>
+				<input type="submit" value="Update">
+			</div>
+		</form>
+	</div>
+	<div id="snow" style="z-index: -1;"></div>
+</div>
+{% endblock %}

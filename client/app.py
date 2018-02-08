@@ -28,7 +28,6 @@ cur.close()
 def index():
 	if request.method == "POST":
 		if request.form['MAC'] in last_update_dict:
-			print(last_update_dict[request.form['MAC']])
 			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
@@ -47,7 +46,7 @@ def index():
 
 					else:
 						return "Key Error"
-
+				db, cur = connection()
 				cur = db.cursor()
 				print("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
@@ -155,6 +154,57 @@ def add_device():
 			return redirect('/login')
 	else:
 		return redirect('/login')
+
+@app.route('/manage')
+def manage():
+    if session.get('authenticated'):
+        if session['authenticated']:
+            devices = []
+            db, cur = connection()
+            cur.execute("SELECT deviceID, name FROM Devices")
+            for row in cur.fetchall():
+                devices.append({'deviceID':row[0], 'varname':row[1].replace(' ', '_'), 'name':row[1]})
+            return render_template('manage.html', devices=devices)
+        else:
+            return redirect('/login')
+    else:
+        return redirect('/login')
+
+@app.route('/manage_device/<device_to_manage>', methods=['GET', 'POST'])
+def manage_device(device_to_manage):
+    if session.get('authenticated'):
+        if session['authenticated']:
+            if request.method == "GET":
+                device_info = {}
+                db, cur = connection()
+                cur.execute("SELECT * FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
+                for row in cur.fetchall():
+                    device_info = {
+                           'deviceID':row[0],
+                           'deviceType':row[1],
+                           'name':row[2],
+                           'descr':row[3],
+                           'coords':{'lat':row[4], 'lon':row[5]},
+                           'MAC':row[6]}
+                return render_template('manage_device.html', device_info=device_info)
+            if request.method == "POST":
+                db, cur = connection()
+                update_string = "UPDATE Devices SET "
+                update_string += "name=\"" + str(request.form['name']) + "\","
+                update_string += "descr=\"" + str(request.form['descr']) + "\","
+                update_string += "lat=" + str(request.form['lat']) + ","
+                update_string += "lon=" + str(request.form['lon']) + ","
+                update_string += "MAC=\"" + str(request.form['MAC']) + "\""
+                update_string += " WHERE deviceID=" + device_to_manage
+                print(update_string)
+                cur.execute(update_string)
+                db.commit()
+                flash("Device Succesffuly Updated")
+                return redirect('/manage')
+        else:
+            return redirect('/login')
+    else:
+        return redirect('/login')
 
 @app.route('/contact', methods=['POST'])
 def contact():
