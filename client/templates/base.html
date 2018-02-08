@@ -36,6 +36,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/map">Map</a></li>
         {% if session['authenticated'] %}<li><a href="/add_device">Register Device</a></li>{% endif %}
+	{% if session['authenticated'] %}<li><a href="/manage">Manage Devices</a></li>{% endif %}
         {% if session['authenticated'] %}<li><a href="/logout">Log Out</a></li>
         {% else %}<li><a href="/login">Log In</a></li>{% endif %}
       </ul>
