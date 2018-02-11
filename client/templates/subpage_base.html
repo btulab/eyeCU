@@ -16,7 +16,7 @@
 {% block header %}
 <header id="header" class="alt">
    <h1><a href="/">
-        <img src="static/images/eyeCUlogo.png" style="vertical-align:middle; height:auto; width:auto; max-height: 50px;"/>
+       <img src="{{url_for('static', filename='images/eyeCUlogo.png')}}" style="vertical-align:middle; height:auto; width:auto; max-height: 50px;"/>
       </a></h1>
 
       <nav> 
@@ -68,11 +68,13 @@
 {% block footer %}
 
 	<!-- Scripts -->
-	<script src="static/assets/js/skel.min.js"></script>
-	<script src="static/assets/js/jquery.min.js"></script>
-	<script src="static/assets/js/jquery.scrollex.min.js"></script>
-	<script src="static/assets/js/util.js"></script>
-	<script src="static/assets/js/main.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='assets/js/skel.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/jquery.scrollex.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/util.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 {% endblock %}
