@@ -18,6 +18,7 @@
 
 .marker_desc {
 	color: black;
+	max-width: 250px;
 }
 
 .marker_desc > h4 {
@@ -36,6 +37,10 @@
 	text-align: left;
 }
 
+.marker_desc > a {
+	color: black;
+}
+
 .loginform {
 	margin-top: 35vh;
 }
@@ -49,7 +54,7 @@ form {
 	border-radius: 5px;
 	background: rgba(0, 0, 0, 0.75);
 	border: 1px solid black;
-  z-index: 1;
+  	z-index: 1;
 }
 
 form > textarea {
@@ -77,9 +82,9 @@ form > h2 {
 	-moz-animation: snow 10s linear infinite;
 	-ms-animation: snow 10s linear infinite;
 	animation: snow 10s linear infinite;
-  z-index: 0;
-  position: fixed;
-  opacity: .04;
+  	z-index: 0;
+  	position: fixed;
+  	opacity: .04;
 
 }
 @keyframes snow {
@@ -132,7 +137,9 @@ form > h2 {
     color: white;
     font-weight: bold;
     margin-bottom: 15px;
-
+    z-index: 15;
+    border-radius: 10px;
+    box-shadow: 0px 5px 5px #333;
 }
 
 /* The close button */

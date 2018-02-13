@@ -1703,7 +1703,6 @@
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #ffffff !important;
 		}
 
 		a.special:not(.button) {

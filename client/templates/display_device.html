@@ -3,6 +3,9 @@
 {% block content %}
 <div class="container">
 	<h1>{{ device }}</h1>
+	{% if data|length < 1 %}
+	No Data to Show
+	{% else %}
 	<table>
 	{% for row in data %}
 	<tr>
@@ -20,6 +23,7 @@
 	</tr>
 	{% endfor %}
 	</table>
+	{% endif %}
 </div>
 {% endblock %}
 

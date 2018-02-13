@@ -39,7 +39,6 @@ def index():
 				cur.execute("SELECT deviceID FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
 				insert_string_values = [str(cur.fetchall()[0][0]), str(last_update_dict[request.form['MAC']])]
 				for key in request.form:
-					print("  " + str(key) + " - " + str(request.form[key]))
 					if str(key) in valid_keys:
 						insert_string_variables.append(str(key))
 						if str(key) == "MAC":
@@ -73,10 +72,8 @@ def map():
                 'coords':{'lat':row[3], 'lon':row[4]}, 
                 'desc':row[2]
 	        })
-        
     except:
         print("Error pulling data from mariadb")
-
 
     return render_template('map.html', location_info=location_info)
 
@@ -139,7 +136,6 @@ def add_device():
 				insert_string += str(request.form['lon']) + ","
 				insert_string += "\"" + str(request.form['MAC']) + "\""
 				insert_string += ")"
-				print(insert_string)
 				cur.execute(insert_string)
 				db.commit()
 				last_update_dict[request.form['MAC']] = 0
@@ -157,9 +153,17 @@ def device(device_to_display):
     device_name = "error"
     device_data = []
     db, cur = connection()
+    try:
+        int(device_to_display) #ensure that the device ID is an integer
+    except:
+        flash("Invalid device ID")
+        return redirect('/map') 
     cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
     for row in cur.fetchall():
         device_name = row[0]
+    if(device_name == "error"):
+        flash("Invalid device ID")
+        return redirect('/map')
     cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc")
     for row in cur.fetchall():
         device_data.append({
@@ -174,7 +178,6 @@ def device(device_to_display):
             'altitude':row[9],
             'voc':row[10],
             'sound':row[11]})
-    print(device_data)
     return render_template('display_device.html', device=device_name, data=device_data)
 
 @app.route('/manage')
@@ -218,7 +221,6 @@ def manage_device(device_to_manage):
                 update_string += "lon=" + str(request.form['lon']) + ","
                 update_string += "MAC=\"" + str(request.form['MAC']) + "\""
                 update_string += " WHERE deviceID=" + device_to_manage
-                print(update_string)
                 cur.execute(update_string)
                 db.commit()
                 flash("Device Succesffuly Updated")

@@ -6,7 +6,7 @@
 		<script>
 	      function initMap() {
 	        var CUboulder = {lat: 40.0056, lng: -105.2672};
-          var theme = [
+  	        var theme = [
   {
     "elementType": "geometry",
     "stylers": [
@@ -246,9 +246,14 @@
         "color": "#92998d"
       }
     ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels",
+    "stylers": [{ "visibility": "off" }]
   }
 ];
-	        var hide_features = [{featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "poi",	    elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }]}];
+	        var hide_features = [{featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }]},{featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }]}];
 	        var markerIcon = {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
 	          		 scale: 3,};
 	        var map = new google.maps.Map(document.getElementById('map'), {
@@ -257,7 +262,7 @@
 	          drag: 'none',
 	          zoomControl: false,
 	          gestureHandling: 'none',
-		      styles: theme,
+		  styles: theme,
 	        });
 
 
@@ -269,7 +274,7 @@
 	        		icon: markerIcon,
 		        });
 	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
-		        	content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><p><a href='{{ url_for('device', device_to_display=device['id']) }}'>Link to data</a><br>{{ device['desc'] }}</p></div>",
+				content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><br>{{ device['desc'] }}</p><p><a href='{{ url_for('device', device_to_display=device['id']) }}' style='color: grey;'>View Device Data ></a></div>",
 		        });
 		        {{ device['varname'] }}.addListener('click', function() {
 		        	{{ device['varname'] }}_info.open(map, {{ device['varname'] }});

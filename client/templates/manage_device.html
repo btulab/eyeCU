@@ -5,7 +5,7 @@
 	<div style="margin:auto; width: 80%;">
 		<form method="post" action="/manage_device/{{ device_info['deviceID'] }}" class="manage_form">
 			<h1 style="float: right;">Edit Device</h1>
-			<h1>{{ device_info['name'] }}</h1>
+			<h1>{{ device_info['name'] }} - #{{ device_info['deviceID'] }}</h1>
 			Type: <select name="deviceType" required>
 				<option value="eyeCU-IoT-Device">eyeCU-IoT-Device</option>
 			</select><br>
