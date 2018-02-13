@@ -6,6 +6,7 @@ from db import connection
 
 import flask_login
 import time
+from datetime import datetime
 import MySQLdb
 import configparser
 import os
@@ -34,7 +35,6 @@ def index():
 				last_update_dict[request.form['MAC']] = time.time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
 				insert_string_values = ["0", str(last_update_dict[request.form['MAC']])]	##TODO - get dev ID dynamically
-				print("--- POST FROM " + str(request.headers.get('User-Agent')) + " ---" + time.strftime("%H:%M:%S"))
 				for key in request.form:
 					print("  " + str(key) + " - " + str(request.form[key]))
 					if str(key) in valid_keys:
@@ -80,9 +80,6 @@ def map():
 
     return render_template('map.html', location_info=location_info)
 
-@app.route('/device/<device_to_display>')
-def device(device_to_display):
-	return render_template('display_device.html', device=device_to_display)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -154,6 +151,31 @@ def add_device():
 			return redirect('/login')
 	else:
 		return redirect('/login')
+
+@app.route('/device/<device_to_display>')
+def device(device_to_display):
+    device_name = "error"
+    device_data = []
+    db, cur = connection()
+    cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
+    for row in cur.fetchall():
+        device_name = row[0]
+    cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display)
+    for row in cur.fetchall():
+        device_data.append({
+            'timeRecieved':datetime.fromtimestamp(int(row[1])).strftime("%d %b %Y - %H:%M:%S"),
+            'light':row[2],
+            'motion':row[3],
+            'pressure':row[4],
+            'temperature':row[5],
+            'humidity':row[6],
+            'co2':row[7],
+            'button':row[8],
+            'altitude':row[9],
+            'voc':row[10],
+            'sound':row[11]})
+    print(device_data)
+    return render_template('display_device.html', device=device_name, data=device_data)
 
 @app.route('/manage')
 def manage():

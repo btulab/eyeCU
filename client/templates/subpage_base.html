@@ -21,8 +21,7 @@
 
       <nav> 
 
-        {% if session['authenticated'] %}<a href="#">{{ session['username'] }}</a>
-        {% endif %}
+        {% if session['authenticated'] %}{{ session['username'] }}{% endif %}
 
         <a href="#menu">Menu</a>
       </nav>
