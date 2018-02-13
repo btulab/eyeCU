@@ -32,9 +32,12 @@ def index():
 			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
+				db, cur = connection()
+				cur = db.cursor()
 				last_update_dict[request.form['MAC']] = time.time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
-				insert_string_values = ["0", str(last_update_dict[request.form['MAC']])]	##TODO - get dev ID dynamically
+				cur.execute("SELECT deviceID FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
+				insert_string_values = [str(cur.fetchall()[0][0]), str(last_update_dict[request.form['MAC']])]
 				for key in request.form:
 					print("  " + str(key) + " - " + str(request.form[key]))
 					if str(key) in valid_keys:
@@ -46,9 +49,6 @@ def index():
 
 					else:
 						return "Key Error"
-				db, cur = connection()
-				cur = db.cursor()
-				print("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				db.commit()
 
@@ -160,7 +160,7 @@ def device(device_to_display):
     cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
     for row in cur.fetchall():
         device_name = row[0]
-    cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display)
+    cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc")
     for row in cur.fetchall():
         device_data.append({
             'timeRecieved':datetime.fromtimestamp(int(row[1])).strftime("%d %b %Y - %H:%M:%S"),
