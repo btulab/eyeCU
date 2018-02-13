@@ -1,0 +1,19 @@
+  <!-- Menu -->
+  <nav id="menu">
+    <div class="inner">
+      <h2>Menu</h2>
+      <ul class="links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/map">Map</a></li>
+          {% if session['authenticated'] %}
+            <li><a href="/add_device">Register Device</a></li>
+            <li><a href="/manage">Manage Devices</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          {% else %}
+            <li><a href="/login">Log In</a></li>
+          {% endif %}
+      </ul>
+      <a href="#" class="close">Close</a>
+    </div>
+  </nav>
+

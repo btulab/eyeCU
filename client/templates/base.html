@@ -28,43 +28,11 @@
       </nav>
   </header>
 
-  <!-- Menu -->
-  <nav id="menu">
-    <div class="inner">
-      <h2>Menu</h2>
-      <ul class="links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/map">Map</a></li>
-          {% if session['authenticated'] %}
-            <li><a href="/add_device">Register Device</a></li>
-            <li><a href="/manage">Manage Devices</a></li>
-            <li><a href="/logout">Log Out</a></li>
-          {% else %}
-            <li><a href="/login">Log In</a></li>
-          {% endif %}
-      </ul>
-      <a href="#" class="close">Close</a>
-    </div>
-  </nav>
-  <!-- Banner -->
+{% include "menu.html" %}
 
-  <p id="revision">{{session['version']}}</p>
-  <section id="banner">
-
-    <div class="inner">
-      <!--<div class="logo"><span class="icon fa-shield"></span></div>-->
-
-      <h2>eyeCU
-        <div class="ralphie"><img src="static/images/eyeCUlogo.png" 
-                                  style="height: auto; width: auto; max-height: 160px; float:right; padding-bottom: 40px;"
-                                  alt="" /></div>
-
-      </h2>
-
-      <p>The Red Buffalo Network</p>
-    </div>
-  </section>
 {% endblock %}
+
+
 
 {% block content %}{% endblock %}
 
