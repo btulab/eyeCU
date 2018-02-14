@@ -7,6 +7,19 @@
 	No Data to Show
 	{% else %}
 	<table>
+	<tr>
+	<td>['timeRecieved']</td>
+	<td>['light']</td>
+	<td>['motion']</td>
+	<td>['pressure']</td>
+	<td>['temperature']</td>
+	<td>['humidity']</td>
+	<td>['co2']</td>
+	<td>['button']</td>
+	<td>['altitude']</td>
+	<td>['voc']</td>
+	<td>['sound']</td>
+	</tr>
 	{% for row in data %}
 	<tr>
 	<td>{{ row['timeRecieved'] }}</td>
