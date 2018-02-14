@@ -244,7 +244,7 @@ def manage_device(device_to_manage):
                 update_string += " WHERE deviceID=" + device_to_manage
                 cur.execute(update_string)
                 db.commit()
-                flash("Device Succesffuly Updated")
+                flash("Device Successfully Updated")
                 return redirect('/manage')
         else:
             return redirect('/login')
