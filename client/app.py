@@ -10,6 +10,7 @@ from datetime import datetime
 import MySQLdb
 import configparser
 import os
+import atexit
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -23,7 +24,6 @@ for row in cur.fetchall():
     last_update_dict[row[0]] = 0
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
-cur.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -32,7 +32,6 @@ def index():
 			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
-				db, cur = connection()
 				cur = db.cursor()
 				last_update_dict[request.form['MAC']] = time.time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
@@ -62,7 +61,6 @@ def index():
 def map():
     location_info = []
     try: 
-        db, cur = connection()
         cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
         for row in cur.fetchall():
             location_info.append({
@@ -85,7 +83,6 @@ def login():
         password = request.form["password"] or "null"
 
         try:
-            db, cur = connection()
             cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
             if cur.fetchone()[0]:
                 cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
@@ -122,7 +119,6 @@ def add_device():
 	if session.get('authenticated'):
 		if session['authenticated']:
 			if request.method == "POST":
-				db, cur = connection()
 				deviceID = 0
 				cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
 				for row in cur.fetchall():
@@ -152,7 +148,6 @@ def add_device():
 def device(device_to_display):
     device_name = "error"
     device_data = []
-    db, cur = connection()
     try:
         int(device_to_display) #ensure that the device ID is an integer
     except:
@@ -185,7 +180,6 @@ def manage():
     if session.get('authenticated'):
         if session['authenticated']:
             devices = []
-            db, cur = connection()
             cur.execute("SELECT deviceID, name FROM Devices")
             for row in cur.fetchall():
                 devices.append({'deviceID':row[0], 'varname':row[1].replace(' ', '_'), 'name':row[1]})
@@ -201,7 +195,6 @@ def manage_device(device_to_manage):
         if session['authenticated']:
             if request.method == "GET":
                 device_info = {}
-                db, cur = connection()
                 cur.execute("SELECT * FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
                 for row in cur.fetchall():
                     device_info = {
@@ -213,7 +206,6 @@ def manage_device(device_to_manage):
                            'MAC':row[6]}
                 return render_template('manage_device.html', device_info=device_info)
             if request.method == "POST":
-                db, cur = connection()
                 update_string = "UPDATE Devices SET "
                 update_string += "name=\"" + str(request.form['name']) + "\","
                 update_string += "descr=\"" + str(request.form['descr']) + "\","
@@ -251,6 +243,14 @@ def backend():
 @app.errorhandler(500)
 def errorpage(e):
         return render_template('error.html')
+
+def cleanup():
+    try:
+        cur.close()
+    except Exception:
+        pass
+
+atexit.register(cleanup)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
