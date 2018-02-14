@@ -8,13 +8,13 @@
 			Type: <select name="deviceType" required>
 				<option value="eyeCU-IoT-Device">eyeCU-IoT-Device</option>
 			</select><br>
-			Name: <input type="text" name="name" required><br>
+			Name: <input type="text" name="name" value="{{ form_data['name'] }}" required><br>
 			Description:<br>
-			<textarea rows="3" cols="50" name="descr" placeholder="Give a brief description of the device's location.                                                             (150 characters or less)"></textarea><br>
+			<textarea rows="3" cols="50" name="descr" placeholder="Give a brief description of the device's location.                                                             (150 characters or less)">{{ form_data['descr'] }}</textarea><br>
 			Coordinates <i>(default is center of map)</i><br>
-			Lat: <input type="text" name="lat" value="40.0056" required><br>
-			Lon: <input type="text" name="lon" value="-105.2672" required><br>
-			MAC: <input type="text" name="MAC" placeholder="XX:XX:XX:XX:XX:XX" required><br>
+			Lat: <input type="text" name="lat" value="{% if form_data['lat'] %}{{ form_data['lat'] }}{% else %}40.0056{% endif %}" required><br>
+			Lon: <input type="text" name="lon" value="{% if form_data['lon'] %}{{ form_data['lon'] }}{% else %}-105.2672{% endif %}" required><br>
+			MAC: <input type="text" name="MAC" placeholder="XX:XX:XX:XX:XX:XX" {% if form_data['MAC'] %}value="{{ form_data['MAC'] }}"{% endif %} required><br>
 			<div>
 				<input type="submit" value="Add">
 			</div>

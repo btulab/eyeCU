@@ -39,13 +39,13 @@
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
+    <div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;
+    </span>
     {% for message in messages %}
-      <div class="alert">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;
-      </span>
-    {{ message }}
-      </div>
+    {{ message }}<br>
     {% endfor %}
+    </div>
   {% endif %}
 {% endwith %}
 {% block body %}{% endblock %}
