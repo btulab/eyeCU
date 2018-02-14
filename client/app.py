@@ -164,7 +164,8 @@ def add_device():
 					db.commit()
 					last_update_dict[request.form['MAC']] = 0
 					flash("Device Succesffuly Added")
-					return render_template("display_add_device.html")
+                                        form_data = {}
+					return render_template("display_add_device.html", form_data=form_data)
 			elif request.method == "GET":
 				form_data = {}
 				return render_template('display_add_device.html',form_data=form_data)
