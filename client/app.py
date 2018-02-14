@@ -246,6 +246,11 @@ def iot():
 def backend():
     return render_template('backend.html')
 
+@app.errorhandler(400)
+@app.errorhandler(404)
+@app.errorhandler(500)
+def errorpage(e):
+        return render_template('error.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
