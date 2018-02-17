@@ -14,7 +14,7 @@ import atexit
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.4.3'
+version = '0.7.17-2'
 
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 

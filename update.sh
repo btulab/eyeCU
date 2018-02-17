@@ -1,9 +1,14 @@
 #!/bin/bash
 
+# Colors
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
 workdir="/data/eyeCU"
 
 cd $workdir
-echo "Checking for updates..."
+echo -e "${CYAN}Checking for updates..${NC}"
 git remote update
 status=$(git status -uno | grep up-to-date)
 
@@ -15,14 +20,14 @@ then
 	exit
 fi
 
-echo "Building Docker image..."
+echo -e "${RED}Building Docker image...${NC}"
 git pull origin master
 docker build -t eyecu-nginx:latest .
 
-echo "Removing current container..."
+echo -e "${RED}Removing current container...${NC}"
 docker stop eyecu-client
 docker rm eyecu-client
 
-echo "Starting up new container..."
+echo -e "${RED}Starting up new container...${NC}"
 docker run -d -p 80:5000 --link eyecu-mariadb:mariadb --name=eyecu-client eyecu-nginx
 touch /tmp/update
