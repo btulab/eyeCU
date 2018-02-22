@@ -14,54 +14,56 @@ import atexit
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-version = '0.4.3'
+version = '0.7.17-2'
 
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 
-db, cur = connection()
+# Init db connection
+db,cur = connection()
 cur.execute("SELECT MAC FROM Devices")
 for row in cur.fetchall():
     last_update_dict[row[0]] = 0
+cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	if request.method == "POST":
-		if request.form['MAC'] in last_update_dict:
-			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
-				return "Too Many Requests."
-			else:
-				cur = db.cursor()
-				last_update_dict[request.form['MAC']] = time.time()
-				insert_string_variables = ["deviceID", "timeRecieved"]
-				cur.execute("SELECT deviceID FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
-				insert_string_values = [str(cur.fetchall()[0][0]), str(last_update_dict[request.form['MAC']])]
-				for key in request.form:
-					if str(key) in valid_keys:
-						insert_string_variables.append(str(key))
-						if str(key) == "MAC":
-							insert_string_values.append('"' + str(request.form[key]) + '"')
-						else:
-							insert_string_values.append(str(request.form[key]))
-
-					else:
-						return "Key Error"
-        print("POST FROM -- " + request.form['MAC'])
-				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
-				db.commit()
-
-				return "Success!"
-		else:
-			return "Could not verify MAC."
-	else:
-		session['version'] = version
-		return render_template('index.html', form=ContactForm())
+        if request.method == "POST":
+                if request.form['MAC'] in last_update_dict:
+                        if (time.time() - last_update_dict[request.form['MAC']]) < 300:
+                                return "Too Many Requests."
+                        else:
+                                db,cur = connection()
+                                last_update_dict[request.form['MAC']] = time.time()
+                                insert_string_variables = ["deviceID", "timeRecieved"]
+                                cur.execute("SELECT deviceID FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
+                                insert_string_values = [str(cur.fetchall()[0][0]), str(last_update_dict[request.form['MAC']])]
+                                for key in request.form:
+                                        if str(key) in valid_keys:
+                                                insert_string_variables.append(str(key))
+                                                if str(key) == "MAC":
+                                                        insert_string_values.append('"' + str(request.form[key]) + '"')
+                                                else:
+                                                        insert_string_values.append(str(request.form[key]))
+                                        else:
+                                                return "Key Error"
+                                print("POST FROM -- " + request.form['MAC'])
+                                cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
+                                db.commit()
+                                cur.close()
+                                return "Success!"
+                else:
+                        return "Could not verify MAC."
+        else:
+                session['version'] = version
+                return render_template('index.html', form=ContactForm())
 
 @app.route('/map')
 def map():
     location_info = []
     try: 
+        db,cur = connection()
         cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
         for row in cur.fetchall():
             location_info.append({
@@ -70,7 +72,8 @@ def map():
                 'varname':row[1].replace(' ', '_'), 
                 'coords':{'lat':row[3], 'lon':row[4]}, 
                 'desc':row[2]
-	        })
+                })
+        cur.close()
     except:
         print("Error pulling data from mariadb")
 
@@ -84,6 +87,7 @@ def login():
         password = request.form["password"] or "null"
 
         try:
+            db,cur = connection()
             cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
             if cur.fetchone()[0]:
                 cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
@@ -91,6 +95,7 @@ def login():
                 password = password + salt[0][0]
                 cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
                 passhash = cur.fetchall()
+                cur.close()
                 if pbkdf2_sha256.verify(password, passhash[0][0]):
                     session['authenticated'] = True
                     session['username'] = username
@@ -112,68 +117,71 @@ def login():
 
 @app.route('/logout')
 def logout():
-	session['authenticated'] = False
-	return redirect('/')
+        session['authenticated'] = False
+        return redirect('/')
 
 @app.route('/add_device', methods=['GET', 'POST'])
 def add_device():
-	if session.get('authenticated'):
-		if session['authenticated']:
-			if request.method == "POST":
-				errors = False
-				names = []
-				macs = []
-				coords = []
-				cur.execute("SELECT name,MAC,lat,lon FROM Devices")
-				for row in cur.fetchall():
-				       names.append(str(row[0])) 
-				       macs.append(str(row[1]))
-				       coords.append(str(row[2]) + "," + str(row[3]))
-				if(request.form['name'] in names):
-					errors = True
-					flash("Name already in use")
-				if(request.form['MAC'] in macs):
-					errors = True
-					flash("MAC already in use")
-				mod_coords = request.form['lat'].strip("0") + "," + request.form['lon'].strip("0")
-				if(mod_coords in coords):
-					errors = True
-					flash("Device already at that location")
-				if(errors):
-					form_data = {}
-					form_data['name'] = request.form['name']
-					form_data['descr'] = request.form['descr']
-					form_data['lat'] = request.form['lat']
-					form_data['lon'] = request.form['lon']
-					form_data['MAC'] = request.form['MAC']
-					return render_template("display_add_device.html", form_data=form_data)
-				else:
-					deviceID = 0
-					cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
-					for row in cur.fetchall():
-						deviceID = int(row[0]) + 1
-					insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, MAC) VALUES ("
-					insert_string += str(deviceID) + ","
-					insert_string += "\"" + str(request.form['deviceType']) + "\","
-					insert_string += "\"" + str(request.form['name']) + "\","
-					insert_string += "\"" + str(request.form['descr']) + "\","
-					insert_string += str(request.form['lat']) + ","
-					insert_string += str(request.form['lon']) + ","
-					insert_string += "\"" + str(request.form['MAC']) + "\""
-					insert_string += ")"
-					cur.execute(insert_string)
-					db.commit()
-					last_update_dict[request.form['MAC']] = 0
-					flash("Device Succesffuly Added")
+        if session.get('authenticated'):
+                if session['authenticated']:
+                        if request.method == "POST":
+                                errors = False
+                                names = []
+                                macs = []
+                                coords = []
+                                db,cur = connection()
+                                cur.execute("SELECT name,MAC,lat,lon FROM Devices")
+                                for row in cur.fetchall():
+                                       names.append(str(row[0])) 
+                                       macs.append(str(row[1]))
+                                       coords.append(str(row[2]) + "," + str(row[3]))
+                                if(request.form['name'] in names):
+                                        errors = True
+                                        flash("Name already in use")
+                                if(request.form['MAC'] in macs):
+                                        errors = True
+                                        flash("MAC already in use")
+                                mod_coords = request.form['lat'].strip("0") + "," + request.form['lon'].strip("0")
+                                if(mod_coords in coords):
+                                        errors = True
+                                        flash("Device already at that location")
+                                if(errors):
                                         form_data = {}
-					return render_template("display_add_device.html", form_data=form_data)
-			elif request.method == "GET":
-				form_data = {}
-				return render_template('display_add_device.html',form_data=form_data)
-		else:
-			return redirect('/login')
-	else:
-		return redirect('/login')
+                                        form_data['name'] = request.form['name']
+                                        form_data['descr'] = request.form['descr']
+                                        form_data['lat'] = request.form['lat']
+                                        form_data['lon'] = request.form['lon']
+                                        form_data['MAC'] = request.form['MAC']
+                                        cur.close()
+                                        return render_template("display_add_device.html", form_data=form_data)
+                                else:
+                                        deviceID = 0
+                                        cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
+                                        for row in cur.fetchall():
+                                                deviceID = int(row[0]) + 1
+                                        insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, MAC) VALUES ("
+                                        insert_string += str(deviceID) + ","
+                                        insert_string += "\"" + str(request.form['deviceType']) + "\","
+                                        insert_string += "\"" + str(request.form['name']) + "\","
+                                        insert_string += "\"" + str(request.form['descr']) + "\","
+                                        insert_string += str(request.form['lat']) + ","
+                                        insert_string += str(request.form['lon']) + ","
+                                        insert_string += "\"" + str(request.form['MAC']) + "\""
+                                        insert_string += ")"
+                                        cur.execute(insert_string)
+                                        db.commit()
+                                        cur.close()
+                                        last_update_dict[request.form['MAC']] = 0
+                                        flash("Device Succesffuly Added")
+                                        form_data = {}
+                                        return render_template("display_add_device.html", form_data=form_data)
+                        elif request.method == "GET":
+                                form_data = {}
+                                return render_template('display_add_device.html',form_data=form_data)
+                else:
+                        return redirect('/login')
+        else:
+                return redirect('/login')
 
 @app.route('/device/<device_to_display>')
 def device(device_to_display):
@@ -184,6 +192,7 @@ def device(device_to_display):
     except:
         flash("Invalid device ID")
         return redirect('/map') 
+    db,cur = connection()
     cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
     for row in cur.fetchall():
         device_name = row[0]
@@ -204,6 +213,7 @@ def device(device_to_display):
             'altitude':row[9],
             'voc':row[10],
             'sound':row[11]})
+    cur.close()
     return render_template('display_device.html', device=device_name, data=device_data)
 
 @app.route('/manage')
@@ -211,9 +221,11 @@ def manage():
     if session.get('authenticated'):
         if session['authenticated']:
             devices = []
+            db,cur = connection()
             cur.execute("SELECT deviceID, name FROM Devices")
             for row in cur.fetchall():
                 devices.append({'deviceID':row[0], 'varname':row[1].replace(' ', '_'), 'name':row[1]})
+            cur.close()
             return render_template('manage.html', devices=devices)
         else:
             return redirect('/login')
@@ -226,6 +238,7 @@ def manage_device(device_to_manage):
         if session['authenticated']:
             if request.method == "GET":
                 device_info = {}
+                db,cur = connection()
                 cur.execute("SELECT * FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
                 for row in cur.fetchall():
                     device_info = {
@@ -235,6 +248,7 @@ def manage_device(device_to_manage):
                            'descr':row[3],
                            'coords':{'lat':row[4], 'lon':row[5]},
                            'MAC':row[6]}
+                cur.close()
                 return render_template('manage_device.html', device_info=device_info)
             if request.method == "POST":
                 update_string = "UPDATE Devices SET "
@@ -246,6 +260,7 @@ def manage_device(device_to_manage):
                 update_string += " WHERE deviceID=" + device_to_manage
                 cur.execute(update_string)
                 db.commit()
+                cur.close()
                 flash("Device Successfully Updated")
                 return redirect('/manage')
         else:
