@@ -2,32 +2,110 @@
 
 {% block content %}
 <div class="container">
-<div class="chart"><canvas id="myChart"></canvas></div>
+<div class="chart"><canvas id="env_chart"></canvas></div>
+<div class="chart"><canvas id="interact_chart"></canvas></div>
+<div class="chart"><canvas id="altitude_chart"></canvas></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script>
-	var ctx = document.getElementById('myChart').getContext('2d');
-	var chart = new Chart(ctx, {
+	var ctx = document.getElementById('env_chart').getContext('2d');
+	var env_chart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
         datasets: [{
-            label: "",
-            backgroundColor: 'rgb(255, 99, 132)',
+            label: "Light",
             borderColor: 'rgb(255, 99, 132)',
             data: {{ data["light"] }},
             fill: false,
+        }, {
+        		label: "Pressure",
+        		borderColor: 'rgb(125, 125, 0)',
+        		data: {{ data["pressure"] }},
+        		fill: false,
+        }, {
+        		label: "Temperature",
+        		borderColor: 'rgb(0, 255, 0)',
+        		data: {{ data["temperature"] }},
+        		fill: false,
+        }, {
+        		label: "Humidity",
+        		borderColor: 'rgb(100, 100, 125)',
+        		data: {{ data["humidity"] }},
+        		fill: false,
+        }, {
+        		label: "CO2",
+        		borderColor: 'rgb(200, 200, 200)',
+        		data: {{ data["co2"] }},
+        		fill: false,
+        }, {
+        		label: "VOC",
+        		borderColor: 'rgb(200, 0, 200)',
+        		data: {{ data["voc"] }},
+        		fill: false,
+        }, {
+        		label: "Sound",
+        		borderColor: 'rgb(0, 100, 255)',
+        		data: {{ data["sound"] }},
+        		fill: false,
         }]
     },
     options: {
         title: {
         	display: true,
-        	text: "Device Data",
+        	text: "{{ device }} - Environment",
+        	fontSize: 30,
         },
-        legend: {display: false},
     },
-});
+	});
+	var ctx2 = document.getElementById('interact_chart').getContext('2d');
+	var interact_chart = new Chart(ctx2, {
+		type: 'line',
+		data: {
+        labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
+        datasets: [{
+        		label: "Button",
+        		borderColor: 'rgb(150, 150, 150)',
+        		data: {{ data["button"] }},
+        		fill: false,
+        }, {
+        		label: "Motion",
+        		borderColor: 'rgb(255, 0, 0)',
+        		data: {{ data["motion"] }},
+        		fill: false,
+        }]
+    },
+    options: {
+    	title: {
+    		display: true,
+    		text: "{{ device }} - Interaction",
+    		fontSize: 30,
+    	},
+    },
+  });
+	var ctx3 = document.getElementById('altitude_chart').getContext('2d');
+  var altitude_chart = new Chart(ctx3, {
+  	type: 'line',
+  	data: {
+        labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
+        datasets: [{
+        		label: "Altitude",
+        		borderColor: 'rgb(0, 150, 200)',
+        		data: {{ data["altitude"] }},
+        		fill: false,
+        }]
+    },
+    options: {
+    	title: {
+    		display: true,
+    		text: "{{ device }} - Altitude",
+    		fontSize: 30,
+    	},
+    },
+  });
+
 </script>
 </div>
 {% endblock %}
 
+<!-- legend: {display: false}, -->
 <!-- https://developers.google.com/maps/documentation/javascript/ -->
