@@ -212,7 +212,7 @@ def device(device_to_display):
 		data_altitude.append(row[9])
 		data_voc.append(row[10])
 		data_sound.append(row[11])
-	data = {"timeRecieved": data_timeRecieved, "light": data_light, "motion": data_motion, "pressure": data_pressure, "temperature": data_temperature, "humidity": data_humidity, "co2": data_co2, "button": data_button, "altitude": data_altitude, "voc": data_voc, "sound": data_sound}
+	data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button": list(reversed(data_button)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
 	print(data)
 	cur.close()
 	return render_template('display_device.html', device=device_name, data=data)
