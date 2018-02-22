@@ -2,41 +2,31 @@
 
 {% block content %}
 <div class="container">
-	<h1>{{ device }}</h1>
-	{% if data|length < 1 %}
-	No Data to Show
-	{% else %}
-	<table>
-	<tr>
-	<td>['timeRecieved']</td>
-	<td>['light']</td>
-	<td>['motion']</td>
-	<td>['pressure']</td>
-	<td>['temperature']</td>
-	<td>['humidity']</td>
-	<td>['co2']</td>
-	<td>['button']</td>
-	<td>['altitude']</td>
-	<td>['voc']</td>
-	<td>['sound']</td>
-	</tr>
-	{% for row in data %}
-	<tr>
-	<td>{{ row['timeRecieved'] }}</td>
-	<td>{{ row['light'] }}</td>
-	<td>{{ row['motion'] }}</td>
-	<td>{{ row['pressure'] }}</td>
-	<td>{{ row['temperature'] }}</td>
-	<td>{{ row['humidity'] }}</td>
-	<td>{{ row['co2'] }}</td>
-	<td>{{ row['button'] }}</td>
-	<td>{{ row['altitude'] }}</td>
-	<td>{{ row['voc'] }}</td>
-	<td>{{ row['sound'] }}</td>
-	</tr>
-	{% endfor %}
-	</table>
-	{% endif %}
+<div class="chart"><canvas id="myChart"></canvas></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+	var ctx = document.getElementById('myChart').getContext('2d');
+	var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
+        datasets: [{
+            label: "",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: {{ data["light"] }},
+            fill: false,
+        }]
+    },
+    options: {
+        title: {
+        	display: true,
+        	text: "Device Data",
+        },
+        legend: {display: false},
+    },
+});
+</script>
 </div>
 {% endblock %}
 

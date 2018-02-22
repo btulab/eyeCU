@@ -1,3 +1,13 @@
+.chart {
+	width: 900px;
+	height: 600px;
+	margin: auto;
+	background: #dddddd;
+	padding: 10px;
+	padding-top: 50px;
+	border-radius: 10px;
+}
+
 .container {
 	padding-top: 130px;
 }

@@ -186,12 +186,12 @@ def add_device():
 @app.route('/device/<device_to_display>')
 def device(device_to_display):
 	device_name = "error"
-	device_data = []
 	try:
 		int(device_to_display) #ensure that the device ID is an integer
 	except:
 		flash("Invalid device ID")
 		return redirect('/map') 
+	data_timeRecieved, data_light, data_motion, data_pressure, data_temperature, data_humidity, data_co2, data_button, data_altitude, data_voc, data_sound = [], [], [], [], [], [], [], [], [], [], []
 	db,cur = connection()
 	cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
 	for row in cur.fetchall():
@@ -199,22 +199,23 @@ def device(device_to_display):
 	if(device_name == "error"):
 		flash("Invalid device ID")
 		return redirect('/map')
-	cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc")
+	cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc LIMIT 1000")
 	for row in cur.fetchall():
-		device_data.append({
-		'timeRecieved':datetime.fromtimestamp(int(row[1])).strftime("%d %b %Y - %H:%M:%S"),
-		'light':row[2],
-		'motion':row[3],
-		'pressure':row[4],
-		'temperature':row[5],
-		'humidity':row[6],
-		'co2':row[7],
-		'button':row[8],
-		'altitude':row[9],
-		'voc':row[10],
-		'sound':row[11]})
+		data_timeRecieved.append(datetime.fromtimestamp(int(row[1])).strftime("%H:%M"))  #"%d %b %Y - %H:%M:%S"
+		data_light.append(row[2])
+		data_motion.append(row[3])
+		data_pressure.append(row[4])
+		data_temperature.append(row[5])
+		data_humidity.append(row[6])
+		data_co2.append(row[7])
+		data_button.append(row[8])
+		data_altitude.append(row[9])
+		data_voc.append(row[10])
+		data_sound.append(row[11])
+	data = {"timeRecieved": data_timeRecieved, "light": data_light, "motion": data_motion, "pressure": data_pressure, "temperature": data_temperature, "humidity": data_humidity, "co2": data_co2, "button": data_button, "altitude": data_altitude, "voc": data_voc, "sound": data_sound}
+	print(data)
 	cur.close()
-	return render_template('display_device.html', device=device_name, data=device_data)
+	return render_template('display_device.html', device=device_name, data=data)
 
 @app.route('/manage')
 def manage():
