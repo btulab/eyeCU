@@ -47,7 +47,7 @@ def index():
 
 					else:
 						return "Key Error"
-                                print("POST FROM -- " + request.form['MAC'])
+        print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				db.commit()
 
