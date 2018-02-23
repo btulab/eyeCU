@@ -17,7 +17,7 @@ import atexit
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 socketio = SocketIO(app)
-version = '0.7.17-2'
+version = '0.8.22-2'
 
 
 last_message = 'Test Device just said HI!'

@@ -126,8 +126,11 @@
   	var socket;
 		$(document).ready(function() {
 	    var socket = io.connect('http://' + document.domain + ':' + location.port);
+	    socket.on('connect', function() {
+      	$('#status').val('Listening to live network updates...\n');
+	    });
 			socket.on('update', function(data) {
-      $('#status').val(data.msg + '\n' + $('#status').val());
+      	$('#status').val(data.msg + '\n' + $('#status').val());
 			});
     });
 	</script>
