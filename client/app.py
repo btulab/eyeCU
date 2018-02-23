@@ -32,16 +32,9 @@ cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
-@socketio.on('joined')
-def joined(message):
-    emit('my response', message, broadcast=True)
-    print("Someone's HERE")
-    emit('update', {'msg': 'Someone has connected.'})
-
 @socketio.on('update')
 def update(message):
-    emit('update', {'msg': message['msg']})
-
+    emit('update', {message['msg']})
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -67,8 +60,10 @@ def index():
 						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
+				socketio.emit('update', {'msg':'Device says hello'});
 				db.commit()
 				cur.close()
+
 				return "Success!"
 		else:
 			return "Could not verify MAC."

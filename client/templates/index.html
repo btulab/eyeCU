@@ -4,7 +4,7 @@
   <!-- Banner -->
 
   <p id="revision">{{session['version']}}</p>
-  <textarea id="status" cols="40" rows="5"></textarea><br><br>
+  <textarea readonly id="status" cols="40" rows="3"></textarea><br><br>
   <section id="banner">
 
     <div class="inner">
@@ -126,11 +126,8 @@
   	var socket;
 		$(document).ready(function() {
 	    var socket = io.connect('http://' + document.domain + ':' + location.port);
-			socket.on('connect', function() {
-			socket.emit('joined', {data: 'I\'m connected!'});
-    	});
-    	socket.on('update', function(data) {
-      $('#status').val($('#status').val() + data.msg + '\n');
+			socket.on('update', function(data) {
+      $('#status').val(data.msg + '\n' + $('#status').val());
 			});
     });
 	</script>

@@ -130,9 +130,18 @@ form > h2 {
 }
 
 #status {
+	
 	position: absolute;
+	color: #6ad3ff;
+	font-weight: bold;
 	opacity: .3;
 	padding-top: 30px;
+	overflow: hidden;
+	resize: none;
+	border: none;
+	caret-color: transparent;
+	text-align: left;
+	padding-right: 10vw;
 }
 
  /* The alert message box */
