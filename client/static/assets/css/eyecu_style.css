@@ -129,6 +129,12 @@ form > h2 {
   opacity: .4;
 }
 
+#status {
+	position: absolute;
+	opacity: .3;
+	padding-top: 30px;
+}
+
  /* The alert message box */
 .alert {
 

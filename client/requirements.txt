@@ -4,3 +4,5 @@ configparser
 flask_login
 flask-wtf
 flask_mail
+eventlet
+flask-socketio

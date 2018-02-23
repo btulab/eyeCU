@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash
+from flask_socketio import SocketIO
+from flask_socketio import send, emit
 from passlib.hash import pbkdf2_sha256
 from forms import ContactForm
 from flask_mail import Mail, Message
@@ -14,8 +16,11 @@ import atexit
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
+socketio = SocketIO(app)
 version = '0.7.17-2'
 
+
+last_message = 'Test Device just said HI!'
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 
 # Init db connection
@@ -26,6 +31,18 @@ for row in cur.fetchall():
 cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
+
+@socketio.on('joined')
+def joined(message):
+    emit('my response', message, broadcast=True)
+    print("Someone's HERE")
+    emit('update', {'msg': 'Someone has connected.'})
+
+@socketio.on('update')
+def update(message):
+    emit('update', {'msg': message['msg']})
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -303,4 +320,4 @@ def cleanup():
 atexit.register(cleanup)
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0')
+    socketio.run(app)
