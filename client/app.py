@@ -47,8 +47,12 @@ def index():
 				db,cur = connection()
 				last_update_dict[request.form['MAC']] = time.time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
-				cur.execute("SELECT deviceID FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
-				insert_string_values = [str(cur.fetchall()[0][0]), str(last_update_dict[request.form['MAC']])]
+				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
+				device = cur.fetchall()
+				deviceID = device[0][0]
+				deviceName = device[0][1]
+				insert_string_values = [str(deviceID), str(last_update_dict[request.form['MAC']])]
+				print(insert_string_values)
 				for key in request.form:
 					if str(key) in valid_keys:
 						insert_string_variables.append(str(key))
@@ -60,7 +64,8 @@ def index():
 						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
-				socketio.emit('update', {'msg':'Device says hello'});
+				msg = ("%s is Alive!" % deviceName)
+				socketio.emit('update', {'msg':msg});
 				db.commit()
 				cur.close()
 
