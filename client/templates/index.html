@@ -20,9 +20,8 @@
       <p>The Red Buffalo Network</p>
     </div>
   </section>
-  <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-
+	<script src="{{ url_for('static', filename='assets/js/jquery-1.4.2.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/js/socket.io.min.js') }}"></script>
 
 <div id="page-wrapper">
   <!-- Wrapper -->
@@ -125,14 +124,14 @@
   <script type="text/javascript" charset="utf-8">
   	var socket;
 		$(document).ready(function() {
-	    var socket = io.connect('http://' + document.domain + ':' + location.port);
-	    socket.on('connect', function() {
-      	$('#status').val('Listening to live network updates...\n');
-	    });
-			socket.on('update', function(data) {
-      	$('#status').val(data.msg + '\n' + $('#status').val());
+			var socket = io.connect('http://' + document.domain + ':' + location.port);
+			socket.on('connect', function() {
+				$('#status').val('Listening to live network updates...\n');
 			});
-    });
+			socket.on('update', function(data) {
+				$('#status').val(data.msg + '\n' + $('#status').val());
+			});
+		});
 	</script>
 
 
