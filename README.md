@@ -3,7 +3,7 @@ eyeCU is a project aiming to monitor the "health" of the University of Colorado,
 
 
 Docker Setup
-=====
+==
 We're using a docker image with uWSGI and NGinx for Flask apps. For more info see:
 
 
@@ -37,6 +37,10 @@ $ mysql -uroot -pmypass -h 172.17.0.2 < mariadb/eyeCUdata.sql
 ```
 
 Nginx Container
+```
+$ ./update.sh -f
+```
+Manually:
 ```
 $ sudo docker build -t eyecu-nginx:latest .
 $ sudo docker run -d -p 80:5000 --link eyecu-mariadb:mariadb --name=eyecu-client eyecu-nginx
