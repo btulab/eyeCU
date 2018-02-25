@@ -16,9 +16,9 @@ git_update() {
   echo -e "${GREEN}$(date)"
   echo -e "${CYAN}Checking for updates..${NC}"
   git remote update
-  status=$(git status -uno | grep up-to-date)
+  status=$(git status -uno | grep "up to date")
 
-  if [[ -n "${status// }" && "$force" != "-f" ]]
+  if [[ -n "${status// }" && "$force" != "-f" && "$force" != "--force" ]]
   then
     touch /tmp/noupdate
     echo "Branch is up to date."

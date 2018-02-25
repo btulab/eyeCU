@@ -38,7 +38,7 @@ $ mysql -uroot -pmypass -h 172.17.0.2 < mariadb/eyeCUdata.sql
 
 Nginx Container
 ```
-$ ./update.sh -f
+$ ./update.sh --force
 ```
 Manually:
 ```
