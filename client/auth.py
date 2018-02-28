@@ -5,6 +5,7 @@ import MySQLdb
 import string, random, sys
 
 def createUser(username, password):
+    db,cur = connection()
 
     # check if user already exists
     cur = db.cursor()
@@ -15,12 +16,9 @@ def createUser(username, password):
 
     # add a random salt
     salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
-    print(salt)
     password = password + salt
-    print(password)
 
     passhash = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
-    print(passhash)
 
     # insert into database
     query = "INSERT INTO Users(email,salt,hash) " \
@@ -33,16 +31,10 @@ def createUser(username, password):
     # grab salt
     cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
     salt = cur.fetchall()
-    print("salt")
-    print(salt)
-    print(salt[0][0])
 
     # hash
     cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
     passhash = cur.fetchall()
-    print("excess")
-    print(passhash[0][0])
-    print(pbkdf2_sha256.verify(password, passhash[0][0]))
 
 if __name__ == '__main__':
 

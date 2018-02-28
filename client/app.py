@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_socketio import SocketIO
-from flask_socketio import send, emit
+from flask_socketio import emit
 from passlib.hash import pbkdf2_sha256
 from forms import ContactForm
 from flask_mail import Mail, Message
@@ -64,7 +64,7 @@ def index():
 						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
-				msg = ("Data recieved from %s" % deviceName)
+				msg = ("Data recieved from %s (Device: %s)" % (deviceName,deviceID))
 				socketio.emit('update', {'msg':msg});
 				db.commit()
 				cur.close()
