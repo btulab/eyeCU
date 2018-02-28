@@ -136,10 +136,12 @@ form > h2 {
 	font-weight: bold;
 	opacity: .3;
 	padding-top: 30px;
-	overflow: hidden;
+	overflow: auto;
 	resize: none;
 	border: none;
 	caret-color: transparent;
+	border-color: Transparent;
+	border: 0;
 	text-align: left;
 	padding-right: 10vw;
 }
