@@ -29,6 +29,12 @@ password = reallylongpassword
 " > client/db.cfg
 ```
 
+Auto Installation:
+```
+$ ./deploy.sh --complete
+```
+
+Manually:
 MySQL/MariaDB Container
 ```
 $ docker pull mariadb:latest
@@ -37,10 +43,6 @@ $ mysql -uroot -pmypass -h 172.17.0.2 < mariadb/eyeCUdata.sql
 ```
 
 Nginx Container
-```
-$ ./update.sh --force
-```
-Manually:
 ```
 $ sudo docker build -t eyecu-nginx:latest .
 $ sudo docker run -d -p 80:5000 --link eyecu-mariadb:mariadb --name=eyecu-client eyecu-nginx

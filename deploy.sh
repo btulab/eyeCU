@@ -10,19 +10,19 @@ NC='\033[0m' # No Color
 image_name="eyecu-nginx"
 workdir="/data/eyeCU"
 cd $workdir
-force=$1
+flag=$1
 
 git_update() {
   echo -e "${GREEN}$(date)"
   echo -e "${CYAN}Checking for updates..${NC}"
   git remote update
-  status=$(git status -uno | grep "up to date")
+  status=$(git status -uno | grep "up-to-date")
 
-  if [[ -n "${status// }" && "$force" != "-f" && "$force" != "--force" ]]
+  if [[ -n "${status// }" && "$flag" != "-f" && "$flag" != "--flag" ]]
   then
     touch /tmp/noupdate
     echo "Branch is up to date."
-    echo "Use -f flag to force new image creation and container deployment."
+    echo "Use -f flag to flag new image creation and container deployment."
     exit
   fi
 }
@@ -64,6 +64,25 @@ launch_production_image() {
   docker run -d -p 80:5000 --link eyecu-mariadb:mariadb --name=eyecu-client $image_name:$1
   touch /tmp/update
 }
+
+deploy_mysql() {
+echo "Setting up MySQL Container..."
+mysql_password=$(grep passwd client/db.cfg | awk '{print $3}')
+docker pull mariadb:latest
+docker run -d --name=eyecu-mariadb --env="MYSQL_ROOT_PASSWORD=$mysql_password" mariadb
+echo "Patiently Waiting..."
+sleep 6
+mysql_ip=$(docker inspect eyecu-mariadb | grep \"IPAddress\": | awk '{print $2;exit}' | tr -d '",')
+echo $mysql_ip
+mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql
+echo "mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql"
+}
+
+if [ "$flag" == "--complete" ]
+then
+	deploy_mysql
+	$flag="--force"
+fi
 
 git_update
 git pull origin master
