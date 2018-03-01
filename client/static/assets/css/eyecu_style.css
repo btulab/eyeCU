@@ -119,7 +119,8 @@ form > h2 {
   100% {background-position: 500px 1000px, 200px 400px, -100px 300px;}
 }
 
-#revision {
+#version {
+
   position: absolute;
   top: 1.5vh;
   padding-left: 15px;
@@ -129,24 +130,31 @@ form > h2 {
   opacity: .4;
 }
 
-#status {
-	
-	position: absolute;
-	color: #6ad3ff;
-	font-weight: bold;
-	opacity: .3;
-	padding-top: 30px;
-	overflow: auto;
-	resize: none;
-	border: none;
-	caret-color: transparent;
-	border-color: Transparent;
-	border: 0;
-	text-align: left;
-	padding-right: 10vw;
+#statusBar {
+
+	padding-top: 4vh;
+	display: block;
+	height: 15vh;
+	overflow: hidden;
+
 }
 
- /* The alert message box */
+#status {
+
+	position: relative;
+	color: #6ad3ff;
+	font-weight: bold;
+	background: transparent;
+	opacity: .3;
+	overflow: auto;
+	resize: none;
+	text-align: left;
+	padding-left: 15px;
+	padding-right: 10vw;
+	margin-bottom: -8px;
+}
+
+/* The alert message box */
 .alert {
 
     position: absolute;

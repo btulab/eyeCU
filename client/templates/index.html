@@ -3,8 +3,9 @@
 {% block content %}
   <!-- Banner -->
 
-  <p id="revision">{{session['version']}}</p>
-  <textarea readonly id="status" cols="40" rows="3"></textarea><br><br>
+  <p id="version">{{session['version']}}</p>
+  <div id="statusBar">
+  </div>
   <section id="banner">
 
     <div class="inner">
@@ -103,10 +104,10 @@
 		$(document).ready(function() {
 			var socket = io.connect('http://' + document.domain + ':' + location.port);
 			socket.on('connect', function() {
-				$('#status').val('Listening to network updates...\n');
+				$('#statusBar').prepend("<p id=status>Listening for network updates...</p>");
 			});
 			socket.on('update', function(data) {
-				$('#status').val(data.msg + '\n' + $('#status').val());
+				$('#statusBar').preprend("<p id=status>"+ data.msg +"</p>");
 			});
 		});
 	</script>
