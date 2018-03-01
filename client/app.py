@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from db import connection
 
 import flask_login
-import time
+from time import localtime
 from datetime import datetime
 import MySQLdb
 import configparser
@@ -45,14 +45,16 @@ def index():
 				return "Too Many Requests."
 			else:
 				db,cur = connection()
-				last_update_dict[request.form['MAC']] = time.time()
+				last_update_dict[request.form['MAC']] = localtime()
 				insert_string_variables = ["deviceID", "timeRecieved"]
 				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
 				device = cur.fetchall()
+				if (len(device) > 1):
+					print("Error: duplicate MAC -- " + request.form['MAC'])
+					return "Error: duplicate MAC"
 				deviceID = device[0][0]
 				deviceName = device[0][1]
 				insert_string_values = [str(deviceID), str(last_update_dict[request.form['MAC']])]
-				print(insert_string_values)
 				for key in request.form:
 					if str(key) in valid_keys:
 						insert_string_variables.append(str(key))
@@ -229,10 +231,14 @@ def device(device_to_display):
 		data_altitude.append(row[9])
 		data_voc.append(row[10])
 		data_sound.append(row[11])
-	data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button": list(reversed(data_button)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
-	print(data)
-	cur.close()
-	return render_template('display_device.html', device=device_name, data=data)
+	if (len(data_timeRecieved) == len(data_light) == len(data_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button) == len(data_altitude) == len(data_voc) == len(data_sound)):
+		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button": list(reversed(data_button)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
+		cur.close()
+		return render_template('display_device.html', device=device_name, data=data)
+	else:
+		print("Error: Data returned not all the same length")
+		flash("Server Error for Device")
+		return redirect('/map')
 
 @app.route('/manage')
 def manage():
