@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from db import connection
 
 import flask_login
-from time import localtime, time
+from time import localtime, time, strftime
 from datetime import datetime
 import MySQLdb
 import configparser
@@ -220,7 +220,7 @@ def device(device_to_display):
 		return redirect('/map')
 	cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc LIMIT 1000")
 	for row in cur.fetchall():
-		data_timeRecieved.append(datetime.fromtimestamp(int(row[1])).strftime("%d %b - %H:%M"))
+		data_timeRecieved.append(strftime("%d %b - %H:%M", localtime(int(row[1]))))
 		data_light.append(row[2])
 		data_motion.append(row[3])
 		data_pressure.append(row[4])
