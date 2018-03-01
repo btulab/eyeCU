@@ -107,7 +107,7 @@
 				$('#statusBar').prepend("<p id=status>Listening for network updates...</p>");
 			});
 			socket.on('update', function(data) {
-				$('#statusBar').preprend("<p id=status>"+ data.msg +"</p>");
+				$('#statusBar').prepend("<p id=status>"+ data.msg +"</p>");
 			});
 		});
 	</script>
