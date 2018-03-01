@@ -66,7 +66,7 @@ def index():
 						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
-				msg = ("Data recieved from %s (Device: %s)" % (deviceName,deviceID))
+				msg = ("Data recieved from %s <a href=\"/device/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
 				socketio.emit('update', {'msg':msg});
 				db.commit()
 				cur.close()
