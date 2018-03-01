@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="container">
+{% if data["timeRecieved"]|length %}
 <div class="chart"><canvas id="env_chart"></canvas></div>
 <div class="chart"><canvas id="interact_chart"></canvas></div>
 <div class="chart"><canvas id="altitude_chart"></canvas></div>
@@ -104,6 +105,9 @@
   });
 
 </script>
+{% else %}
+	<div style="margin:auto; max-width:500px; font-size:40px; text-align: center;">No data to display!</div>
+{% endif %}
 </div>
 {% endblock %}
 

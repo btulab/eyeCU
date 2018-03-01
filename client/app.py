@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from db import connection
 
 import flask_login
-from time import localtime
+from time import localtime, time
 from datetime import datetime
 import MySQLdb
 import configparser
@@ -41,11 +41,11 @@ def update(message):
 def index():
 	if request.method == "POST":
 		if request.form['MAC'] in last_update_dict:
-			if (time.time() - last_update_dict[request.form['MAC']]) < 300:
+			if (time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
 				db,cur = connection()
-				last_update_dict[request.form['MAC']] = localtime()
+				last_update_dict[request.form['MAC']] = time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
 				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
 				device = cur.fetchall()
@@ -220,7 +220,7 @@ def device(device_to_display):
 		return redirect('/map')
 	cur.execute("SELECT * FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc LIMIT 1000")
 	for row in cur.fetchall():
-		data_timeRecieved.append(datetime.fromtimestamp(int(row[1])).strftime("%H:%M"))  #"%d %b %Y - %H:%M:%S"
+		data_timeRecieved.append(datetime.fromtimestamp(int(row[1])).strftime("%d %b - %H:%M"))
 		data_light.append(row[2])
 		data_motion.append(row[3])
 		data_pressure.append(row[4])
