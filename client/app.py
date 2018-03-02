@@ -17,7 +17,7 @@ import atexit
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 socketio = SocketIO(app)
-version = '0.8.22-2'
+version = '0.9.1-3'
 
 
 last_message = 'Test Device just said HI!'
@@ -32,9 +32,9 @@ cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
-@socketio.on('update')
-def update(message):
-    emit('update', {message['msg']})
+#@socketio.on('update')
+#def update(message):
+#    emit('update', {message['msg']})
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -118,6 +118,8 @@ def login():
 				if pbkdf2_sha256.verify(password, passhash[0][0]):
 					session['authenticated'] = True
 					session['username'] = username
+					msg = ("%s has logged in...something's broken..." % username.upper())
+					socketio.emit('update', {'msg':msg});
 					return redirect('/')
 				else:
 					error = "Incorrect username or password!"
@@ -129,6 +131,8 @@ def login():
 		except:
 			print("Error accessing database.")
 			error = "Our server is experiencing issues processing your request."
+			msg = ("Users are having trouble accessing our database...")
+			socketio.emit('update', {'msg':msg});
 			return render_template("login.html", error=error)
 		
 	elif request.method == "GET":
@@ -191,7 +195,9 @@ def add_device():
 					db.commit()
 					cur.close()
 					last_update_dict[request.form['MAC']] = 0
-					flash("Device Successfully Added")
+					msg = ("Device Succesfully Added")
+					flash(msg)
+					socketio.emit('update', {'msg':msg});
 					form_data = {}
 					return render_template("display_add_device.html", form_data=form_data)
 			elif request.method == "GET":
@@ -286,7 +292,9 @@ def manage_device(device_to_manage):
 				cur.execute(update_string)
 				db.commit()
 				cur.close()
-				flash("Device Successfully Updated")
+				msg = ("Device Settings Succesfully Updated")
+				flash(msg)
+				socketio.emit('update', {'msg':msg});
 				return redirect('/manage')
 			else:
 				return errorpage('404')
