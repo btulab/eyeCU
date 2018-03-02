@@ -165,7 +165,7 @@ form > h2 {
 
 /* Animation */
 .anim-typewriter{
-  animation: typewriter 4s steps(50) 1s 1 normal both,
+  animation: typewriter 4.5s steps(58) 1s 1 normal both,
              blinkTextCursor 500ms steps(44) infinite normal;
 }
 @keyframes typewriter{
