@@ -133,9 +133,11 @@ form > h2 {
 #statusBar {
 
 	padding-top: 6.5vh;
+	padding-left: 15px;
 	display: block;
 	height: 17vh;
 	overflow: hidden;
+	background: transparent;
 
 }
 
@@ -144,19 +146,37 @@ form > h2 {
 	position: relative;
 	color: #6ad3ff;
 	font-weight: bold;
-	background: transparent;
 	opacity: .3;
-	overflow: auto;
 	resize: none;
 	text-align: left;
-	padding-left: 15px;
-	padding-right: 10vw;
+/*	padding-left: 15px;
+	padding-right: 10vw;*/
+	margin: 0;
 	margin-bottom: -8px;
+	white-space: nowrap;
+	overflow: hidden;
+
 }
 
 #status:nth-child(even) {
 	color: #ddfdff;
 }
+
+
+/* Animation */
+.anim-typewriter{
+  animation: typewriter 4s steps(50) 1s 1 normal both,
+             blinkTextCursor 500ms steps(44) infinite normal;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 100%;}
+}
+@keyframes blinkTextCursor{
+  from{border-right-color: rgba(255,255,255,.75);}
+  to{border-right-color: transparent;}
+}
+
 /* The alert message box */
 .alert {
 
