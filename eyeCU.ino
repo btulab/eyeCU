@@ -6,7 +6,7 @@
 
 #define SOUND_GATE_IN 4
 #define SOUND_ANALOG_IN A0
-#define PIR_IN 0
+#define PIR_IN 5
 #define BUTTON 15
 #define CCS811_ADDR 0x5B
 
@@ -17,6 +17,7 @@ unsigned int ms;  // Integration ("shutter") time in milliseconds
 const char ssid[] = "UCB Wireless";
 const char password[] = "";
 int buttonPressed = 0;
+int motionDetected = 0;
 
 CCS811 myCCS811(CCS811_ADDR);
 BME280 bme;
@@ -112,6 +113,7 @@ void loop() {
   if (proximity == LOW) // If the sensor's output goes low, motion is detected
   {
     Serial.println("Motion detected!");
+    motionDetected = 1;
   }
 
   /////////////// Sound Sensor Data ///////////////
@@ -256,6 +258,7 @@ void loop() {
 
             
   buttonPressed = 0; //Reset button status for next time around the loop
+  motionDetected = 0; //Reset motion status a well.
   delay(300000); //wait 5 minutes before next reading
  
 
