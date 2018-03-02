@@ -132,9 +132,9 @@ form > h2 {
 
 #statusBar {
 
-	padding-top: 4vh;
+	padding-top: 6.5vh;
 	display: block;
-	height: 15vh;
+	height: 18vh;
 	overflow: hidden;
 
 }
@@ -155,7 +155,7 @@ form > h2 {
 }
 
 #status:nth-child(even) {
-	color: #6aff85;
+	color: #ddfdff;
 }
 /* The alert message box */
 .alert {

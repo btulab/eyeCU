@@ -66,16 +66,16 @@ launch_production_image() {
 }
 
 deploy_mysql() {
-echo "Setting up MySQL Container..."
-mysql_password=$(grep passwd client/db.cfg | awk '{print $3}')
-docker pull mariadb:latest
-docker run -d --name=eyecu-mariadb --env="MYSQL_ROOT_PASSWORD=$mysql_password" mariadb
-echo "Patiently Waiting..."
-sleep 6
-mysql_ip=$(docker inspect eyecu-mariadb | grep \"IPAddress\": | awk '{print $2;exit}' | tr -d '",')
-echo $mysql_ip
-mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql
-echo "mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql"
+	echo "Setting up MySQL Container..."
+	mysql_password=$(grep passwd client/db.cfg | awk '{print $3}')
+	docker pull mariadb:latest
+	docker run -d --name=eyecu-mariadb --env="MYSQL_ROOT_PASSWORD=$mysql_password" mariadb
+	echo "Patiently Waiting..."
+	sleep 6
+	mysql_ip=$(docker inspect eyecu-mariadb | grep \"IPAddress\": | awk '{print $2;exit}' | tr -d '",')
+	echo $mysql_ip
+	mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql
+	echo "mysql -uroot -p$mysql_password -h $mysql_ip < mariadb/eyeCU_schema.sql"
 }
 
 if [ "$flag" == "--complete" ]
