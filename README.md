@@ -19,12 +19,8 @@ user = root
 passwd = mypass
 db = eyedb
 
-[mail]
-server = smtp.gmail.com
-port = 465
-ssl = True
-username = eyecuexample@gmail.com
-password = reallylongpassword
+[motd]
+message = "Hello World!"
 
 " > client/db.cfg
 ```

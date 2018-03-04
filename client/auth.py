@@ -1,11 +1,11 @@
 from passlib.hash import pbkdf2_sha256
-from db import connection
+from conf import dbconnection
 import configparser
 import MySQLdb
 import string, random, sys
 
 def createUser(username, password):
-    db,cur = connection()
+    db,cur = dbconnection()
 
     # check if user already exists
     cur = db.cursor()

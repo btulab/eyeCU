@@ -4,7 +4,7 @@ from flask_socketio import emit
 from passlib.hash import pbkdf2_sha256
 from forms import ContactForm
 from flask_mail import Mail, Message
-from db import connection
+from conf import dbconnection, motd
 
 import flask_login
 from time import localtime, time, strftime
@@ -23,18 +23,14 @@ version = '0.9.1-3'
 last_message = 'Test Device just said HI!'
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
 
-# Init db connection
-db,cur = connection()
+# Init db dbconnection
+db,cur = dbconnection()
 cur.execute("SELECT MAC FROM Devices")
 for row in cur.fetchall():
 	last_update_dict[row[0]] = 0
 cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
-
-#@socketio.on('update')
-#def update(message):
-#    emit('update', {message['msg']})
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -44,7 +40,7 @@ def index():
 			if (time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
-				db,cur = connection()
+				db,cur = dbconnection()
 				last_update_dict[request.form['MAC']] = time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
 				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
@@ -76,13 +72,14 @@ def index():
 			return "Could not verify MAC."
 	else:
 		session['version'] = version
-		return render_template('index.html', form=ContactForm())
+		session['motd'] = motd()
+		return render_template('index.html')
 
 @app.route('/map')
 def map():
 	location_info = []
 	try: 
-		db,cur = connection()
+		db,cur = dbconnection()
 		cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
 		for row in cur.fetchall():
 			location_info.append({
@@ -106,7 +103,7 @@ def login():
 		password = request.form["password"] or "null"
 
 		try:
-			db,cur = connection()
+			db,cur = dbconnection()
 			cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
 			if cur.fetchone()[0]:
 				cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
@@ -152,7 +149,7 @@ def add_device():
 				names = []
 				macs = []
 				coords = []
-				db,cur = connection()
+				db,cur = dbconnection()
 				cur.execute("SELECT name,MAC,lat,lon FROM Devices")
 				for row in cur.fetchall():
 					   names.append(str(row[0])) 
@@ -217,7 +214,7 @@ def device(device_to_display):
 		flash("Invalid device ID")
 		return redirect('/map') 
 	data_timeRecieved, data_light, data_motion, data_pressure, data_temperature, data_humidity, data_co2, data_button, data_altitude, data_voc, data_sound = [], [], [], [], [], [], [], [], [], [], []
-	db,cur = connection()
+	db,cur = dbconnection()
 	cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
 	for row in cur.fetchall():
 		device_name = row[0]
@@ -251,7 +248,7 @@ def manage():
 	if session.get('authenticated'):
 		if session['authenticated']:
 			devices = []
-			db,cur = connection()
+			db,cur = dbconnection()
 			cur.execute("SELECT deviceID, name FROM Devices")
 			for row in cur.fetchall():
 				devices.append({'deviceID':row[0], 'varname':row[1].replace(' ', '_'), 'name':row[1]})
@@ -268,7 +265,7 @@ def manage_device(device_to_manage):
 		if session['authenticated']:
 			if request.method == "GET":
 				device_info = {}
-				db,cur = connection()
+				db,cur = dbconnection()
 				cur.execute("SELECT deviceID,deviceType,name,descr,lat,lon,MAC FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
 				for row in cur.fetchall():
 					device_info = {
@@ -281,7 +278,7 @@ def manage_device(device_to_manage):
 				cur.close()
 				return render_template('manage_device.html', device_info=device_info)
 			elif request.method == "POST":
-				db,cur = connection()
+				db,cur = dbconnection()
 				update_string = "UPDATE Devices SET "
 				update_string += "name=\"" + str(request.form['name']) + "\","
 				update_string += "descr=\"" + str(request.form['descr']) + "\","
