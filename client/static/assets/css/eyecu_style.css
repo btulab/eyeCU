@@ -15,6 +15,12 @@
 	border: none;
 }
 
+.status_table {
+	text-shadow: 1px 1px 1px black;
+	margin: auto;
+	width: 80%;
+}
+
 .device_status {
 	margin-right: 30vw;
 }

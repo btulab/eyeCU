@@ -3,10 +3,10 @@
 {% block content %}
 <div class="container">
 	<div>
-		<table style="margin: auto; width: 80%;">
+		<table class="status_table">
 		<tr><td><span style="margin-right: 30px;"><b><u>Name</u></b></span><span style="float: right;"><span class="device_status"><b><u>Status</u></b></span></span></td></a></tr>
 		{% for device in devices %}
-		<tr><td><a href="devices/{{ device['deviceID'] }}" class="list_link"><span style="margin-right: 30px;">{{ device['name'] }}</span><span style="float: right;"><span class="device_status" style="color: {% if device['alive'] %}green">&#x2713;{% else %}red">X{% endif %}</span>&gt;</span></td></a></tr>
+		<tr><td><a href="devices/{{ device['deviceID'] }}" class="list_link"><span style="margin-right: 30px;">{{ device['name'] }}</span><span style="float: right;"><span class="device_status" style="color: {% if device['alive'] %}green">&#x2713;{% else %}red"><b>X</b>{% endif %}</span>&gt;</span></td></a></tr>
 		{% endfor %}
 		</table>
 	</div>

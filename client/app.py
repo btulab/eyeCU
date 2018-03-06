@@ -212,7 +212,7 @@ def devices():
 	cur.execute("SELECT deviceID,name,MAC FROM Devices")
 	for row in cur.fetchall():
 		device_info = {'deviceID':row[0], 'name':row[1]}
-		if (time() - last_update_dict[row[2]]) < (300 * 4):		#If the device has missed more than 4 updates
+		if (time() - last_update_dict[row[2]]) > (300 * 4):		#If the device has missed more than 4 updates
 			device_info['alive'] = False
 		else:
 			device_info['alive'] = True
