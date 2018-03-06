@@ -1,3 +1,24 @@
+.banner_link_container {
+	text-align: center;
+}
+
+.banner_link {
+	font-weight: bold;
+	margin-left: 20px;
+	margin-right:20px;
+	border-bottom: none;
+}
+
+.list_link {
+	display: block;
+	outline: 0;
+	border: none;
+}
+
+.device_status {
+	margin-right: 30vw;
+}
+
 .chart {
 	width: 900px;
 	height: 600px;
@@ -93,9 +114,9 @@ form > h2 {
 	-moz-animation: snow 10s linear infinite;
 	-ms-animation: snow 10s linear infinite;
 	animation: snow 10s linear infinite;
-  	z-index: 0;
-  	position: fixed;
-  	opacity: .04;
+	z-index: -1;
+	position: fixed;
+	opacity: .04;
 
 }
 @keyframes snow {

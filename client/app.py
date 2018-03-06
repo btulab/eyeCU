@@ -205,7 +205,22 @@ def add_device():
 	else:
 		return redirect('/login')
 
-@app.route('/device/<device_to_display>')
+@app.route('/devices')
+def devices():
+	devices = []
+	db,cur = dbconnection()
+	cur.execute("SELECT deviceID,name,MAC FROM Devices")
+	for row in cur.fetchall():
+		device_info = {'deviceID':row[0], 'name':row[1]}
+		if (time() - last_update_dict[row[2]]) < (300 * 4):		#If the device has missed more than 4 updates
+			device_info['alive'] = False
+		else:
+			device_info['alive'] = True
+		devices.append(device_info)
+	cur.close()
+	return render_template('display_devices.html', devices=devices)
+
+@app.route('/devices/<device_to_display>')
 def device(device_to_display):
 	device_name = "error"
 	try:
@@ -237,7 +252,7 @@ def device(device_to_display):
 	if (len(data_timeRecieved) == len(data_light) == len(data_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button) == len(data_altitude) == len(data_voc) == len(data_sound)):
 		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button": list(reversed(data_button)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
 		cur.close()
-		return render_template('display_device.html', device=device_name, data=data)
+		return render_template('display_one_device.html', device=device_name, data=data)
 	else:
 		print("Error: Data returned not all the same length")
 		flash("Server Error for Device")
