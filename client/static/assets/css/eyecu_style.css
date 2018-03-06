@@ -1,3 +1,34 @@
+.display_device_nav {
+	text-align: center;
+	padding: 10px;
+}
+
+.display_device_nav > a {
+	border: none;
+	outline: 0;
+	margin: 0 15px 0 10px;
+}
+
+.chart > h1 {
+	font-size: xx-large;
+	color: black;
+	text-align: center;
+	margin: -20px 0 20px 0;
+}
+
+.stats_table {
+	width: 100%;
+	color: black;
+	background: none;
+	text-align: center;
+	font-size: x-large;
+}
+
+.stats_title {
+	color: black;
+	text-decoration: underline;
+}
+
 .banner_link_container {
 	text-align: center;
 }
@@ -38,10 +69,11 @@
 	padding: 10px;
 	padding-top: 50px;
 	border-radius: 10px;
+	color: black;
 }
 
 .container {
-	padding-top: 130px;
+	padding-top: 20vh;
 }
 
 .map_wrapper {
