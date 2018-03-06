@@ -5,7 +5,7 @@
 	<div>
 		<table style="margin: auto; width: 80%;">
 		{% for device in devices %}
-		<tr><td><a href="manage_device/{{ device['deviceID'] }}" style="display: block; outline: 0; border: none;"><span style="margin-right: 30px;">{{ device['name'] }}</span><span style="float: right;">&gt;</span></td></a></tr>
+		<tr><td><a href="manage_device/{{ device['deviceID'] }}" style="display: block; outline: 0; border: none;"><span style="margin-right: 30px;">{{ device['name'] }}</span><span style="float: right;"><li class="fa fa-edit"></span></td></a></tr>
 		{% endfor %}
 		</table>
 	</div>

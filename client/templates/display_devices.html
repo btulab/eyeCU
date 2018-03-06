@@ -4,16 +4,18 @@
 <div class="container">
 	<div>
 		<table class="status_table">
-		<tr><td><span style="margin-right: 30px;"><b><u>Name</u></b></span><span style="float: right;"><span class="device_status"><b><u>Status</u></b></span></span></td></a></tr>
+		<tr><td><span style="margin-right: 30px;"><b><u>Name</u></b></span><span style="float: right;"><span class="device_status"><b><u>Online</u></b></span></span></td></a></tr>
 		{% for device in devices %}
 		<tr><td><a href="/devices/{{ device['deviceID'] }}" class="list_link">
 		<span style="margin-right: 30px;">{{ device['name'] }}</span>
 		<span style="float: right;">
+
 			<span class="device_status" style="color: 
-			{% if device['alive'] %}green">&#x2713;
-			{% else %}red"><b>X</b>
-			{% endif %}</span>
-		&gt;</span>
+			{% if device['alive'] %}green"><li class="fa fa-check-circle"></li>
+			{% else %}red"><li class="fa fa-times-circle"></li>
+			{% endif %}
+			</span>
+			<span><li class="fa fa-share-square"></li></span>
 		</td></a></tr>
 		{% endfor %}
 		</table>

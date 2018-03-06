@@ -9,6 +9,10 @@
 	border-bottom: none;
 }
 
+.banner_link:hover {
+	color: #6ad3ff;
+}
+
 .list_link {
 	display: block;
 	outline: 0;
