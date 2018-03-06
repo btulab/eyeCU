@@ -274,7 +274,7 @@
 	        		icon: markerIcon,
 		        });
 	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
-				content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><br>{{ device['desc'] }}</p><p><a href='{{ url_for('devices', device_to_display=device['id']) }}' style='color: grey;'>View Device Data ></a></div>",
+				content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><br>{{ device['desc'] }}</p><p><a href='/devices/{{ device['id'] }}' style='color: grey;'>View Device Data ></a></div>",
 		        });
 		        {{ device['varname'] }}.addListener('click', function() {
 		        	{{ device['varname'] }}_info.open(map, {{ device['varname'] }});

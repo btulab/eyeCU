@@ -62,7 +62,7 @@ def index():
 						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
 				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
-				msg = ("Data recieved from %s <a href=\"/device/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
+				msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
 				socketio.emit('update', {'msg':msg});
 				db.commit()
 				cur.close()
@@ -212,7 +212,7 @@ def devices():
 	cur.execute("SELECT deviceID,name,MAC FROM Devices")
 	for row in cur.fetchall():
 		device_info = {'deviceID':row[0], 'name':row[1]}
-		if (time() - last_update_dict[row[2]]) < (300 * 4):		#If the device has missed more than 4 updates
+		if (time() - last_update_dict[row[2]]) > (300 * 4):		#If the device has missed more than 4 updates
 			device_info['alive'] = False
 		else:
 			device_info['alive'] = True
