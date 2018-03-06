@@ -16,9 +16,9 @@
 }
 
 .status_table {
-	text-shadow: 1px 1px 1px black;
-	margin: auto;
 	width: 80%;
+	margin: auto;
+	text-shadow: 1px 1px 1px black;
 }
 
 .device_status {

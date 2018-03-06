@@ -2494,8 +2494,7 @@
 	}
 
 	table {
-		margin: 0 0 2em 0;
-		width: 100%;
+		background: rgba(0,0,0,0.2);
 	}
 
 		table tbody tr {
