@@ -1,10 +1,21 @@
-version: '2'
+version: '3'
+
 services:
-  web:
+  mariadb:
+    image: mariadb:latest
     restart: always
-    build: ./
-  db:
-    image: mysql
-    restart: always
+    volumes:
+      - ./mariadb/eyeCU_schema.sql:/docker-entrypoint-initdb.d/eyeCU_schema.sql
     environment:
-      MYSQL_ROOT_PASSSORD: permutations
+      MYSQL_ROOT_PASSWORD: thisisnotourpassword
+    expose:
+      - "3306"
+
+  flask:
+    build: .
+    restart: always
+    links:
+      - mariadb
+    command: bash -c "sleep 3 && python -m flask run --host=0.0.0.0 --port=80"
+    expose:
+      - "80"

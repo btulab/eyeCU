@@ -315,9 +315,10 @@ def manage_device(device_to_manage):
 	else:
 		return redirect('/login')
 
-@app.route('/contact', methods=['POST'])
-def contact():
-	return render_template('index.html')
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 @app.route('/about')
 def about():
