@@ -228,7 +228,7 @@ def device(device_to_display):
 	except:
 		flash("Invalid device ID")
 		return redirect('/map') 
-	data_timeRecieved, data_light, data_motion, data_pressure, data_temperature, data_humidity, data_co2, data_button, data_altitude, data_voc, data_sound = [], [], [], [], [], [], [], [], [], [], []
+	data_timeRecieved, data_light, data_motion, data_no_motion, data_pressure, data_temperature, data_humidity, data_co2, data_button_pressed, data_button_not_pressed, data_altitude, data_voc, data_sound = [], [], [], [], [], [], [], [], [], [], [], [], []
 	db,cur = dbconnection()
 	cur.execute("SELECT name FROM Devices WHERE deviceID=" + device_to_display + " LIMIT 1")
 	for row in cur.fetchall():
@@ -238,21 +238,28 @@ def device(device_to_display):
 		return redirect('/map')
 	cur.execute("SELECT deviceId,timeRecieved,light,motion,pressure,temperature,humidity,co2,button,altitude,voc,sound FROM Data WHERE deviceID=" + device_to_display + " ORDER BY timeRecieved desc LIMIT 2016")
 	rows = cur.fetchall()
-	first_data_time = rows[0][1]
+	if(len(rows)):
+		first_data_time = rows[0][1]
 	for row in rows:
 		data_timeRecieved.append(strftime("%d %b - %H:%M", localtime(int(row[1]))))
 		data_light.append(row[2])
-		data_motion.append(row[3])
+		if (row[3]):
+			data_motion.append(row[3])
+		else:
+			data_no_motion.append(row[3])
 		data_pressure.append(row[4])
-		data_temperature.append(row[5])
+		data_temperature.append(row[5] * (9/5) + 32)
 		data_humidity.append(row[6])
 		data_co2.append(row[7])
-		data_button.append(row[8])
+		if (row[8]):
+			data_button_pressed.append(row[8])
+		else:
+			data_button_not_pressed.append(row[8])
 		data_altitude.append(row[9])
 		data_voc.append(row[10])
 		data_sound.append(row[11])
-	if (len(data_timeRecieved) == len(data_light) == len(data_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button) == len(data_altitude) == len(data_voc) == len(data_sound)):
-		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button": list(reversed(data_button)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
+	if (len(data_timeRecieved) == len(data_light) == len(data_motion) + len(data_no_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button_pressed) + len(data_button_not_pressed) == len(data_altitude) == len(data_voc) == len(data_sound)):
+		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "no_motion": list(reversed(data_no_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button_pressed": list(reversed(data_button_pressed)), "button_not_pressed": list(reversed(data_button_not_pressed)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
 		data['expectedSubmissionsPercent'] = len(data_timeRecieved) / ((time() - first_data_time) / 300) * 100
 		cur.close()
 		return render_template('display_one_device.html', device=device_name, data=data)

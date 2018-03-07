@@ -21,8 +21,9 @@ function displayStats() {
 
 <div id="deviceData">
 <div class="chart"><canvas id="env_chart"></canvas></div>
-<div class="chart"><canvas id="interact_chart"></canvas></div>
-<div class="chart"><canvas id="altitude_chart"></canvas></div>
+<div class="chart"><canvas id="act_chart"></canvas></div>
+<div class="chart"><canvas id="atm_chart"></canvas></div>
+<div class="chart"><div style="width:40%; float:left; margin: 50px;"><canvas id="button_int_chart"></canvas></div><div style="width:40%; float: right; margin: 50px 0 0 -50px;"><canvas id="motion_int_chart"></canvas></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script>
 	var ctx = document.getElementById('env_chart').getContext('2d');
@@ -36,11 +37,6 @@ function displayStats() {
             data: {{ data["light"] }},
             fill: false,
         }, {
-        		label: "Pressure",
-        		borderColor: 'rgb(125, 125, 0)',
-        		data: {{ data["pressure"] }},
-        		fill: false,
-        }, {
         		label: "Temperature",
         		borderColor: 'rgb(0, 255, 0)',
         		data: {{ data["temperature"] }},
@@ -50,12 +46,22 @@ function displayStats() {
         		borderColor: 'rgb(100, 100, 125)',
         		data: {{ data["humidity"] }},
         		fill: false,
-        }, {
-        		label: "CO2",
-        		borderColor: 'rgb(200, 200, 200)',
-        		data: {{ data["co2"] }},
-        		fill: false,
-        }, {
+        }]
+    },
+    options: {
+        title: {
+        	display: true,
+        	text: "{{ device }} - Environment",
+        	fontSize: 30,
+        },
+    },
+	});
+	var ctx2 = document.getElementById('act_chart').getContext('2d');
+	var act_chart = new Chart(ctx2, {
+		type: 'line',
+		data: {
+        labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
+        datasets: [{
         		label: "VOC",
         		borderColor: 'rgb(200, 0, 200)',
         		data: {{ data["voc"] }},
@@ -68,28 +74,21 @@ function displayStats() {
         }]
     },
     options: {
-        title: {
-        	display: true,
-        	text: "{{ device }} - Environment",
-        	fontSize: 30,
-        },
+    	title: {
+    		display: true,
+    		text: "{{ device }} - Activity",
+    		fontSize: 30,
+    	},
     },
-	});
-	var ctx2 = document.getElementById('interact_chart').getContext('2d');
-	var interact_chart = new Chart(ctx2, {
-		type: 'line',
+  });
+  var ctx3 = document.getElementById('button_int_chart').getContext('2d');
+  var int_chart = new Chart(ctx3, {
+		type: 'pie',
 		data: {
-        labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
+        labels: ["Pressed", "Not Pressed"],
         datasets: [{
-        		label: "Button",
-        		borderColor: 'rgb(150, 150, 150)',
-        		data: {{ data["button"] }},
-        		fill: false,
-        }, {
-        		label: "Motion",
-        		borderColor: 'rgb(255, 0, 0)',
-        		data: {{ data["motion"] }},
-        		fill: false,
+        		data: [{{ data["button_pressed"]|length }}, {{ data["button_not_pressed"]|length }}],
+        		backgroundColor: ['rgb(255, 102, 102)', 'rgb(255, 255, 102)'], 
         }]
     },
     options: {
@@ -100,8 +99,28 @@ function displayStats() {
     	},
     },
   });
-	var ctx3 = document.getElementById('altitude_chart').getContext('2d');
-  var altitude_chart = new Chart(ctx3, {
+
+  var ctx4 = document.getElementById('motion_int_chart').getContext('2d');
+  var int_chart = new Chart(ctx4, {
+		type: 'pie',
+		data: {
+        labels: ["Motion", "No Motion"],
+        datasets: [{
+        		data: [{{ data["motion"]|length }}, {{ data["no_motion"]|length }}],
+        		backgroundColor: ['rgb(102, 255, 102)', 'rgb(0, 0, 200)'], 
+        }]
+    },
+    options: {
+    	title: {
+    		display: true,
+    		text: "{{ device }} - Motion",
+    		fontSize: 30,
+    	},
+    },
+  });
+
+	var ctx5 = document.getElementById('atm_chart').getContext('2d');
+  var atm_chart = new Chart(ctx5, {
   	type: 'line',
   	data: {
         labels: [{% for timestamp in data["timeRecieved"] %}"{{ timestamp }}",{% endfor %}],
@@ -110,12 +129,22 @@ function displayStats() {
         		borderColor: 'rgb(0, 150, 200)',
         		data: {{ data["altitude"] }},
         		fill: false,
+        }, {
+        		label: "CO2",
+        		borderColor: 'rgb(200, 200, 200)',
+        		data: {{ data["co2"] }},
+        		fill: false,
+        }, {
+        		label: "Pressure",
+        		borderColor: 'rgb(125, 125, 0)',
+        		data: {{ data["pressure"] }},
+        		fill: false,
         }]
     },
     options: {
     	title: {
     		display: true,
-    		text: "{{ device }} - Altitude",
+    		text: "{{ device }} - Atmosphere",
     		fontSize: 30,
     	},
     },
@@ -123,7 +152,7 @@ function displayStats() {
 
 </script>
 </div>
-<div id="deviceStats">
+<div id="deviceStats" style="display: none;">
 	<div class="chart">
 		<h1>{{ device }}</h1>
 		<table class="stats_table"> 
