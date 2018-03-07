@@ -242,22 +242,22 @@ def device(device_to_display):
 		first_data_time = rows[0][1]
 	for row in rows:
 		data_timeRecieved.append(strftime("%d %b - %H:%M", localtime(int(row[1]))))
-		data_light.append(row[2])
+		data_light.append(float("%.2f" % row[2]))
 		if (row[3]):
 			data_motion.append(row[3])
 		else:
 			data_no_motion.append(row[3])
-		data_pressure.append(row[4])
-		data_temperature.append(row[5] * (9/5) + 32)
-		data_humidity.append(row[6])
-		data_co2.append(row[7])
+		data_pressure.append(float("%.2f" % row[4]))
+		data_temperature.append(float("%.2f" % (row[5] * (9/5) + 32)))
+		data_humidity.append(float("%.2f" % row[6]))
+		data_co2.append(float("%.2f" % row[7]))
 		if (row[8]):
 			data_button_pressed.append(row[8])
 		else:
 			data_button_not_pressed.append(row[8])
-		data_altitude.append(row[9])
-		data_voc.append(row[10])
-		data_sound.append(row[11])
+		data_altitude.append(float("%.2f" % row[9]))
+		data_voc.append(float("%.2f" % row[10]))
+		data_sound.append(float("%.2f" % row[11]))
 	if (len(data_timeRecieved) == len(data_light) == len(data_motion) + len(data_no_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button_pressed) + len(data_button_not_pressed) == len(data_altitude) == len(data_voc) == len(data_sound)):
 		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "no_motion": list(reversed(data_no_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button_pressed": list(reversed(data_button_pressed)), "button_not_pressed": list(reversed(data_button_not_pressed)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
 		if (len(rows)):
