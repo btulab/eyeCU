@@ -73,22 +73,19 @@
 }
 
 .container {
-	padding-top: 20vh;
+	margin-top: 75px;
 }
 
 .map_wrapper {
-	height: 75vh;
+	height: 80vh;
 	width: 100%;
 	border: 1px solid black;
 	border-radius: 5px;
 	text-align: center;
 	max-width: 80vw;
-	margin:auto;
+	margin: auto;
 }
 
-@media screen and (min-width: 1280px) {
-	top: 100px;
-}
 
 .marker_desc {
 	color: black;
@@ -276,4 +273,13 @@ form > h2 {
 /* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
+}
+
+@media screen and (max-width: 736px) {
+	.container {
+		margin-top: 50px;
+	}
+	.map_wrapper {
+		max-width: 90%;
+	}
 }

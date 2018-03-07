@@ -3177,7 +3177,6 @@
 				background-image: linear-gradient(to top, rgba(46, 49, 65, 0.8), rgba(46, 49, 65, 0.8)), url("../../images/snowcu.jpe");
 				background-size: auto, cover;
 				background-position: center, center;
-				margin-bottom: -6.5em;
 			}
 
 		}
@@ -3186,7 +3185,6 @@
 
 			#banner {
 				padding: 12em 3em 12.375em 3em ;
-				margin-bottom: -4.75em;
 			}
 
 				#banner .inner {
@@ -3199,7 +3197,6 @@
 
 			#banner {
 				padding: 5em 2em 4.25em 2em ;
-				margin-bottom: -2.5em;
 			}
 
 				#banner .logo {
