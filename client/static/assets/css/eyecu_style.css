@@ -11,7 +11,7 @@ a:hover {
 }
 
 
-#one, #two, #three {
+#sone, #stwo, #sthree {
 	display: inline-block;
 	width: 20%;
 	padding: .75rem 0;
@@ -19,15 +19,15 @@ a:hover {
 	text-decoration: none;
 }
 
-#one:hover ~ hr {
+#sone:hover ~ hr {
 	margin-left: 21%;
 }
 
-#two:hover ~ hr {
+#stwo:hover ~ hr {
  margin-left: 43%;
 }
 
-#three:hover ~ hr {
+#sthree:hover ~ hr {
 	margin-left: 64%;
 }
 
