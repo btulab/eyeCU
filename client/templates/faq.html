@@ -20,28 +20,26 @@
         <p><b>A: </b> We are collecting: Light Levels, Pressure, Temperature, Humidity, CO2, VOC and Sound Levels. Note that we are simply measuring sound levels and not actually recording any audio.</p>
 
 				<h3 class="major">Q: Do you have University Approval for this?</h3>
-        <p><b>A: </b> Yes, we have approval from Campus OIT as well as CUPD to place our devices around campus and have them connected to the university wifi.</p>
+        <p><b>A: </b> Yes, we have approval from Campus OIT as well as CUPD to place our devices which are connected to the university wifi to connect to the server.</p>
 
 	
 				<h3 class="major">Q: How are you sending data?</h3>
         <p><b>A: </b> All of our data is being sent through a HTTP POST request. This means our data can be openly sniffed and collected. It is sent in the following format:
         <pre><code>
-curl -X POST -F 'temperature=28.31' -F 'humidity=11.47' -F 'pressure=83438.14' \
--F 'altitude=5457.00' -F 'co2=1110' -F 'voc=108' -F 'light=40.63' \
--F 'sound=108' -F 'button=0' -F 'motion=0' -F 'MAC=AA:BB:CC:DD:EE:GG'  
+'temperature=28.31', 'humidity=11.47', 'pressure=83438.14', 'altitude=5457.00', 'co2=1110', 'voc=108', 'light=40.63', 'sound=108', 'button=0', 'motion=0', 'MAC=AA:BB:CC:DD:EE:GG'  
         </pre></code>
         </p>
         <p>
-        Our site then displays the data in a pretty little graph as you can see <a href="http://eyecu.colorado.edu/devices/9">here</a>.</p>
+        Our site then graphically displays the data in a graph as you can see <a href="http://eyecu.colorado.edu/devices/9">here</a>.</p>
 
         <h3 class="major">Q: Where is this data being collected?</h3>
-        <p><b>A: </b> Data is being collected and sent to a database located on main campus in the SOC-LAB in the DLC.</p>
+        <p><b>A: </b> Data is being collected and sent to a database located on main campus in the SOC Lab in the DLC.</p>
 
         <h3 class="major">Q: Are these devices recording our conversations?</h3>
-        <p><b>A: </b> No. Each device is equipped with a sound sensor however, this sensor is detecting sound levels and not recording audio.</p>
+        <p><b>A: </b> No. Each device is equipped with a sound sensor, however this sensor is only detecting sound levels and not recording audio.</p>
 
         <h3 class="major">Q: Are these devices taking pictures?</h3>
-        <p><b>A: </b> None of the devices are equipped with cameras. Furthermore, our project does not involve monitoring people.</p>
+        <p><b>A: </b> None of the devices are equipped with cameras or take any pictures. Furthermore, our project does not involve monitoring people.</p>
 
         <h3 class="major">Additional Questions?</h3>
         <p>Please send an email to <u>eyecu@list.colorado.edu</u></p>
