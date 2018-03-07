@@ -11,12 +11,12 @@
 function displayData() {
 	document.getElementById('deviceData').style.display = "initial";
 	document.getElementById('deviceStats').style.display = "none";
-	document.getElementById('floater').style.marginLeft = "43%";
+	document.getElementById('floater').style.marginLeft = "44%";
 }
 function displayStats() {
 	document.getElementById('deviceData').style.display = "none";
 	document.getElementById('deviceStats').style.display = "initial";
-	document.getElementById('floater').style.marginLeft = "64%";
+	document.getElementById('floater').style.marginLeft = "58%";
 }
 </script>
 <div class="display_device_nav">
@@ -61,6 +61,7 @@ function displayStats() {
         	text: "{{ device }} - Environment",
         	fontSize: 30,
         },
+        maintainAspectRatio: false,
     },
 	});
 	var ctx2 = document.getElementById('act_chart').getContext('2d');
@@ -86,6 +87,7 @@ function displayStats() {
     		text: "{{ device }} - Activity",
     		fontSize: 30,
     	},
+      maintainAspectRatio: false,
     },
   });
   var ctx3 = document.getElementById('button_int_chart').getContext('2d');
@@ -154,6 +156,7 @@ function displayStats() {
     		text: "{{ device }} - Atmosphere",
     		fontSize: 30,
     	},
+      maintainAspectRatio: false,
     },
   });
 
