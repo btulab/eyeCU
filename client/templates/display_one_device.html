@@ -8,15 +8,19 @@
 function displayData() {
 	document.getElementById('deviceData').style.display = "initial";
 	document.getElementById('deviceStats').style.display = "none";
+	document.getElementById('floater').style.marginLeft = "43%";
 }
 function displayStats() {
 	document.getElementById('deviceData').style.display = "none";
 	document.getElementById('deviceStats').style.display = "initial";
+	document.getElementById('floater').style.marginLeft = "64%";
 }
 </script>
 <div class="display_device_nav">
-<a href="#" onclick="displayData()">Data</a>|
-<a href="#" onclick="displayStats()">Statistics</a>
+		<a id="one" href="/devices"><b>Devices</b></a>|
+		<a id="two" href="#" onclick="displayData()"><b>Data</b></a>|
+		<a id="three" href="#" onclick="displayStats()"><b>Statistics</b></a>
+		<hr id="floater"/>
 </div>
 
 <div id="deviceData">
