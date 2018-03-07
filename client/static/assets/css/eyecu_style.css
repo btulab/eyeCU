@@ -322,4 +322,7 @@ form > h2 {
 	.map_wrapper {
 		max-width: 90%;
 	}
+	.device_status {
+		margin-right: 10vw;
+	}
 }
