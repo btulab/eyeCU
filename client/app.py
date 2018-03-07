@@ -62,29 +62,16 @@ def index():
 				for key in valid_keys:
 					if key in request.form:
 						if (key == "MAC"):
-							insert_string_values.append(str(request.form[key]))
+							insert_string_values[key] = str("'" + request.form[key] + "'")
 						elif (key == "button" or key == "motion"):
-							insert_string_values.append(int(request.form[key]))
+							insert_string_values[key] = int(request.form[key])
 						else:
-							insert_string_values.append(float(request.form[key]))
+							insert_string_values[key] = float(request.form[key])
 					else:
 						return "Error: all variables must be present"
-				print(insert_string_values, insert_string_variables)
-				print([value for value in insert_string_values])
-				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%s,%f,%f,%d,%d)", (insert_string_values['deviceID'], insert_string_values['timeRecieved'], insert_string_values['temperature'], insert_string_values['co2'], insert_string_values['pressure'], insert_string_values['humidity'], insert_string_values['altitude'], insert_string_values['sound'], insert_string_values['MAC'], insert_string_values['voc'], insert_string_values['light'], insert_string_values['button'], insert_string_values['motion']))
-
-
-#				for key in request.form:
-#					if str(key) in valid_keys:
-#						insert_string_variables.append(str(key))
-#						if str(key) == "MAC":
-#							insert_string_values.append('"' + str(request.form[key]) + '"')
-#						else:
-#							insert_string_values.append(str(request.form[key]))
-#					else:
-#						return "Key Error"
+				sql = "INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%s,%f,%f,%d,%d)" % (insert_string_values['deviceID'], insert_string_values['timeRecieved'], insert_string_values['temperature'], insert_string_values['co2'], insert_string_values['pressure'], insert_string_values['humidity'], insert_string_values['altitude'], insert_string_values['sound'], insert_string_values['MAC'], insert_string_values['voc'], insert_string_values['light'], insert_string_values['button'], insert_string_values['motion'])
+				cur.execute(sql)
 				print("POST FROM -- " + request.form['MAC'])
-#				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
 				socketio.emit('update', {'msg':msg});
 				db.commit()
