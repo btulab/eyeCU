@@ -157,7 +157,7 @@ function displayStats() {
 		<h1>{{ device }}</h1>
 		<table class="stats_table"> 
 			<tr>
-				<td><span class="stats_title">Device Uptime</span><br><br>{{ '%0.2f' % data['expectedSubmissionsPercent'] }} </td>
+				<td><span class="stats_title">Device Uptime</span><br><br>{{ '%0.2f' % data['expectedSubmissionsPercent'] }} %</td>
 				<td><span class="stats_title">Last Data</span><br><br>{{ data['timeRecieved']|last }}</td>
 			</tr>
 		</table>
