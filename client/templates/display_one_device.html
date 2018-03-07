@@ -162,7 +162,9 @@ function displayStats() {
 				{% if data['lastDataMins'] == 0 %}Just Now<br>
 				{% elif data['lastDataMins'] == 1 %}1 Minute Ago<br>
 				{% elif data['lastDataMins'] < 60 %}{{ data['lastDataMins'] }} Minutes Ago<br>
+				{% elif (data['lastDataMins']/60)|int == 1 %}1 Hour Ago<br>
 				{% elif data['lastDataMins']/60 < 24 %}{{ (data['lastDataMins']/60)|int }} Hours Ago<br>
+				{% elif (data['lastDataMins']/1440 == 1)|int == 1 %}1 Day Ago<br>
 				{% elif data['lastDataMins']/1440 < 30 %}{{ (data['lastDataMins']/1440)|int }} Days Ago<br>
 				{% endif %}
 				{{ data['timeRecieved']|last }}</td>
