@@ -266,7 +266,6 @@ def device(device_to_display):
 	if (len(data_timeRecieved) == len(data_light) == len(data_motion) + len(data_no_motion) == len(data_pressure) == len(data_temperature) == len(data_humidity) == len(data_co2) == len(data_button_pressed) + len(data_button_not_pressed) == len(data_altitude) == len(data_voc) == len(data_sound)):
 		data = {"timeRecieved": list(reversed(data_timeRecieved)), "light": list(reversed(data_light)), "motion": list(reversed(data_motion)), "no_motion": list(reversed(data_no_motion)), "pressure": list(reversed(data_pressure)), "temperature": list(reversed(data_temperature)), "humidity": list(reversed(data_humidity)), "co2": list(reversed(data_co2)), "button_pressed": list(reversed(data_button_pressed)), "button_not_pressed": list(reversed(data_button_not_pressed)), "altitude": list(reversed(data_altitude)), "voc": list(reversed(data_voc)), "sound": list(reversed(data_sound))} #all data has to be reversed to re-order it chronologically
 		if (len(rows)):
-			print(str(len(data_timeRecieved)) + " - " + str(time()) + " - " + str(first_data_time) + " - " + str((time() - first_data_time)))
 			data['expectedSubmissionsPercent'] = len(data_timeRecieved) / ((time() - first_data_time) / 300) * 100
 			data['lastDataMins'] = int((time() - last_data_time) / 60)
 		cur.close()
