@@ -7,7 +7,6 @@
   <header>
     <div class="inner">
       <h2>Frequently Asked Questions</h2>
-      <p>Answers for your questions, concerns, thoughts, hopes and dreams</p>
     </div>
   </header>
 
@@ -16,32 +15,38 @@
     <div class="inner">
 
       <section>
-        <h3 class="major">Overview</h3>
-        <p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-        This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-        This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-        <h4>Blockquote</h4>
-        <blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-        <h4>Preformatted</h4>
-        <pre><code>i = 0;
 
-while (!deck.isInOrder()) {
-  print 'Iteration ' + i;
-  deck.shuffle();
-  i++;
-}
+				<h3 class="major">Q: What data are you specifically collecting?</h3>
+        <p><b>A: </b> We are collecting: Light Levels, Pressure, Temperature, Humidity, CO2, VOC and Sound Levels. Note that we are simply measuring sound levels and not actually recording any audio.</p>
 
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-      </section>
+				<h3 class="major">Q: Do you have University Approval for this?</h3>
+        <p><b>A: </b> Yes, we have approval from Campus OIT as well as CUPD to place our devices around campus and have them connected to the university wifi.</p>
 
-      <section>
-        <h3 class="major">Docker</h3>
-      </section>
+	
+				<h3 class="major">Q: How are you sending data?</h3>
+        <p><b>A: </b> All of our data is being sent through a HTTP POST request. This means our data can be openly sniffed and collected. It is sent in the following format:
+        <pre><code>
+curl -X POST -F 'temperature=28.31' -F 'humidity=11.47' -F 'pressure=83438.14' \
+-F 'altitude=5457.00' -F 'co2=1110' -F 'voc=108' -F 'light=40.63' \
+-F 'sound=108' -F 'button=0' -F 'motion=0' -F 'MAC=AA:BB:CC:DD:EE:GG'  
+        </pre></code>
+        </p>
+        <p>
+        Our site then displays the data in a pretty little graph as you can see <a href="http://eyecu.colorado.edu/devices/9">here</a>.</p>
 
-      <section>
-        <h3 class="major">Sparkfun's ESP8266</h3>
-      </section
+        <h3 class="major">Q: Where is this data being collected?</h3>
+        <p><b>A: </b> Data is being collected and sent to a database located on main campus in the SOC-LAB in the DLC.</p>
 
+        <h3 class="major">Q: Are these devices recording our conversations?</h3>
+        <p><b>A: </b> No. Each device is equipped with a sound sensor however, this sensor is detecting sound levels and not recording audio.</p>
+
+        <h3 class="major">Q: Are these devices taking pictures?</h3>
+        <p><b>A: </b> None of the devices are equipped with cameras. Furthermore, our project does not involve monitoring people.</p>
+
+        <h3 class="major">Additional Questions?</h3>
+        <p>Please send an email to <u>eyecu@list.colorado.edu</u></p>
+
+     </section>
 
 
 
