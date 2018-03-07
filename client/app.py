@@ -25,9 +25,13 @@ last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recie
 
 # Init db dbconnection
 db,cur = dbconnection()
+cur.execute("SELECT dev.MAC,dat.timeRecieved FROM Data dat,Devices dev WHERE timeRecieved=(SELECT MAX(timeRecieved) FROM Data dat2 WHERE dat2.deviceID=dev.deviceID)")
+for row in cur.fetchall():
+	last_update_dict[row[0]] = row[1]
 cur.execute("SELECT MAC FROM Devices")
 for row in cur.fetchall():
-	last_update_dict[row[0]] = 0
+	if not(row[0] in last_update_dict):
+		last_update_dict[row[0]] = 0
 cur.close()
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
