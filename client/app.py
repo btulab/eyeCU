@@ -47,25 +47,44 @@ def index():
 				db,cur = dbconnection()
 				last_update_dict[request.form['MAC']] = time()
 				insert_string_variables = ["deviceID", "timeRecieved"]
-				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC='" + request.form['MAC'] + "'")
+				for key in valid_keys:
+					insert_string_variables.append(key)
+				print(insert_string_variables)
+				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC=%s", [request.form['MAC']])
 				device = cur.fetchall()
 				if (len(device) > 1):
 					print("Error: duplicate MAC -- " + request.form['MAC'])
 					return "Error: duplicate MAC"
 				deviceID = device[0][0]
 				deviceName = device[0][1]
-				insert_string_values = [str(deviceID), str(last_update_dict[request.form['MAC']])]
-				for key in request.form:
-					if str(key) in valid_keys:
-						insert_string_variables.append(str(key))
-						if str(key) == "MAC":
-							insert_string_values.append('"' + str(request.form[key]) + '"')
-						else:
+				insert_string_values = [int(deviceID), float(last_update_dict[request.form['MAC']])]
+				insert_string_values = {"deviceID": int(deviceID), "timeRecieved": float(last_update_dict[request.form['MAC']])}
+				for key in valid_keys:
+					if key in request.form:
+						if (key == "MAC"):
 							insert_string_values.append(str(request.form[key]))
+						elif (key == "button" or key == "motion"):
+							insert_string_values.append(int(request.form[key]))
+						else:
+							insert_string_values.append(float(request.form[key]))
 					else:
-						return "Key Error"
+						return "Error: all variables must be present"
+				print(insert_string_values, insert_string_variables)
+				print([value for value in insert_string_values])
+				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%s,%f,%f,%d,%d)", (insert_string_values['deviceID'], insert_string_values['timeRecieved'], insert_string_values['temperature'], insert_string_values['co2'], insert_string_values['pressure'], insert_string_values['humidity'], insert_string_values['altitude'], insert_string_values['sound'], insert_string_values['MAC'], insert_string_values['voc'], insert_string_values['light'], insert_string_values['button'], insert_string_values['motion']))
+
+
+#				for key in request.form:
+#					if str(key) in valid_keys:
+#						insert_string_variables.append(str(key))
+#						if str(key) == "MAC":
+#							insert_string_values.append('"' + str(request.form[key]) + '"')
+#						else:
+#							insert_string_values.append(str(request.form[key]))
+#					else:
+#						return "Key Error"
 				print("POST FROM -- " + request.form['MAC'])
-				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
+#				cur.execute("INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (" + ",".join(insert_string_values) + ")")
 				msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
 				socketio.emit('update', {'msg':msg});
 				db.commit()

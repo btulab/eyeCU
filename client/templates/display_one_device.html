@@ -166,13 +166,11 @@ function displayStats() {
 			<tr>
 				<td><span class="stats_title">Device Uptime</span>
 					<br><br>
-					<div style="margin: auto;">
-					<div class="c100 p{{ '%0.2f' % data['expectedSubmissionsPercent'] }}">
+					<div class="c100 p{{ data['expectedSubmissionsPercent']|int }}">
 						<span>{{ '%0.2f' % data['expectedSubmissionsPercent'] }}% </span>
 					<div class="slice">
 						<div class="bar"></div>
 						<div class="fill"></div>
-					</div>
 					</div>
 					</div>
 					</td>

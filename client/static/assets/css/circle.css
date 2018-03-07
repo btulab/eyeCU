@@ -228,8 +228,7 @@
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  float: left;
-  margin: 0 0.1em 0.1em 0;
+  margin: auto;
   background-color: #cccccc;
 }
 .c100 *,
