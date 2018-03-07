@@ -240,6 +240,7 @@ def device(device_to_display):
 	rows = cur.fetchall()
 	if(len(rows)):
 		first_data_time = rows[len(rows)-1][1]
+		last_data_time = rows[0][1]
 	for row in rows:
 		data_timeRecieved.append(strftime("%d %b - %H:%M", localtime(int(row[1]))))
 		data_light.append(float("%.2f" % row[2]))
@@ -263,7 +264,7 @@ def device(device_to_display):
 		if (len(rows)):
 			print(str(len(data_timeRecieved)) + " - " + str(time()) + " - " + str(first_data_time) + " - " + str((time() - first_data_time)))
 			data['expectedSubmissionsPercent'] = len(data_timeRecieved) / ((time() - first_data_time) / 300) * 100
-			print(data['expectedSubmissionsPercent'])
+			data['lastDataMins'] = int((time() - last_data_time) / 60)
 		cur.close()
 		return render_template('display_one_device.html', device=device_name, data=data)
 	else:

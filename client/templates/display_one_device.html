@@ -158,7 +158,13 @@ function displayStats() {
 		<table class="stats_table"> 
 			<tr>
 				<td><span class="stats_title">Device Uptime</span><br><br>{{ '%0.2f' % data['expectedSubmissionsPercent'] }} %</td>
-				<td><span class="stats_title">Last Data</span><br><br>{{ data['timeRecieved']|last }}</td>
+				<td><span class="stats_title">Last Data</span><br><br>
+				{% if data['lastDataMins'] == 0 %}Just Now<br>
+				{% elif data['lastDataMins'] < 60 %}{{ data['lastDataMins'] }} Minutes Ago<br>
+				{% elif data['lastDataMins']/60 < 24 %}{{ (data['lastDataMins']/60)|int }} Hours Ago<br>
+				{% elif data['lastDataMins']/1440 < 30 %}{{ (data['lastDataMins']/1440)|int }} Days Ago<br>
+				{% endif %}
+				{{ data['timeRecieved']|last }}</td>
 			</tr>
 		</table>
 	</div>
