@@ -2,6 +2,10 @@ a:hover {
 	color: #6dc0c8;
 }
 
+.fa-home {
+	padding: 20px;
+}
+
 .display_device_nav {
 	width: 50%;
 	margin-left: 25%;
@@ -333,5 +337,8 @@ form > h2 {
 	}
 	#floater {
 		display: none;
+	}
+	.fa-home {
+		padding: 15px;
 	}
 }
