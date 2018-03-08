@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_socketio import SocketIO
 from flask_socketio import emit
-from passlib.hash import pbkdf2_sha256
 from flask_mail import Mail, Message
 from conf import dbconnection, motd
 import device as dev
+import auth as auth
 
 import flask_login
 from time import localtime, time, strftime
@@ -83,37 +83,23 @@ def login():
 	if request.method == "POST":
 		username = request.form["username"] or "null"
 		password = request.form["password"] or "null"
-
 		try:
-			db,cur = dbconnection()
-			cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
-			if cur.fetchone()[0]:
-				cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
-				salt = cur.fetchall()
-				password = password + salt[0][0]
-				cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
-				passhash = cur.fetchall()
-				cur.close()
-				if pbkdf2_sha256.verify(password, passhash[0][0]):
-					session['authenticated'] = True
-					session['username'] = username
-					msg = ("%s has logged in...something's broken..." % username.upper())
-					socketio.emit('update', {'msg':msg});
-					return redirect('/')
-				else:
-					error = "Incorrect username or password!"
-					return render_template("/admin/login.html", error=error)
-			else:
-				error = "Incorrect username or password!"
-				return render_template("/admin/login.html", error=error)
-	
+		    if auth.login(username,password):
+		        session['authenticated'] = True
+		        session['username'] = username
+		        msg = ("%s has logged in...something's broken..." % username.upper())
+		        socketio.emit('update', {'msg':msg});
+		        return redirect('/')
+		    else:
+		        error = "Incorrect username or password!"
+		        return render_template("/admin/login.html", error=error)
+
 		except:
-			print("Error accessing database.")
-			error = "Our server is experiencing issues processing your request."
-			msg = ("Users are having trouble accessing our database...")
-			socketio.emit('update', {'msg':msg});
-			return render_template("/admin/login.html", error=error)
-		
+		    print("Error accessing database.")
+		    error = "Our server is experiencing issues processing your request."
+		    msg = ("Users are having trouble accessing our database...")
+		    socketio.emit('update', {'msg':msg});
+		    return render_template("/admin/login.html", error=error)
 	elif request.method == "GET":
 		return render_template("/admin/login.html")
 
