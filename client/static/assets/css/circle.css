@@ -257,7 +257,6 @@
   width: 5em;
   line-height: 5em;
   font-size: 0.2em;
-  color: #cccccc;
   display: block;
   text-align: center;
   white-space: nowrap;
@@ -1010,7 +1009,6 @@
   width: 3.33em;
   line-height: 3.33em;
   font-size: 0.3em;
-  color: #307bbb;
 }
 .c100:hover:after {
   top: 0.04em;
