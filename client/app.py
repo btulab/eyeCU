@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, session, flash
 from flask_socketio import SocketIO
 from flask_socketio import emit
 from passlib.hash import pbkdf2_sha256
-from forms import ContactForm
 from flask_mail import Mail, Message
 from conf import dbconnection, motd
 import device as dev
@@ -23,6 +22,7 @@ version = '0.9.1-3'
 
 last_message = 'Test Device just said HI!'
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
+devices = []
 
 # Init db dbconnection
 db,cur = dbconnection()
@@ -46,7 +46,10 @@ def index():
 				return "Too Many Requests."
 			else:
 			    last_update_dict[request.form['MAC']] = time()
+			    # call device.py helper function
 			    dev.add_data(last_update_dict)
+			    devices = dev.devices(last_update_dict)
+
 		else:
 			return "Could not verify MAC."
 	else:
@@ -72,7 +75,7 @@ def map():
 	except:
 		print("Error pulling data from mariadb")
 
-	return render_template('map.html', location_info=location_info)
+	return render_template('/device/map.html', location_info=location_info)
 
 
 @app.route('/login', methods=['GET', 'POST'])
