@@ -130,20 +130,20 @@ def login():
 					return redirect('/')
 				else:
 					error = "Incorrect username or password!"
-					return render_template("login.html", error=error)
+					return render_template("/admin/login.html", error=error)
 			else:
 				error = "Incorrect username or password!"
-				return render_template("login.html", error=error)
+				return render_template("/admin/login.html", error=error)
 	
 		except:
 			print("Error accessing database.")
 			error = "Our server is experiencing issues processing your request."
 			msg = ("Users are having trouble accessing our database...")
 			socketio.emit('update', {'msg':msg});
-			return render_template("login.html", error=error)
+			return render_template("/admin/login.html", error=error)
 		
 	elif request.method == "GET":
-		return render_template("login.html")
+		return render_template("/admin/login.html")
 
 @app.route('/logout')
 def logout():
@@ -183,7 +183,7 @@ def add_device():
 					form_data['lon'] = request.form['lon']
 					form_data['MAC'] = request.form['MAC']
 					cur.close()
-					return render_template("display_add_device.html", form_data=form_data)
+					return render_template("/admin/add_device.html", form_data=form_data)
 				else:
 					deviceID = 0
 					cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
@@ -206,10 +206,10 @@ def add_device():
 					flash(msg)
 					socketio.emit('update', {'msg':msg});
 					form_data = {}
-					return render_template("display_add_device.html", form_data=form_data)
+					return render_template("/admin/add_device.html", form_data=form_data)
 			elif request.method == "GET":
 				form_data = {}
-				return render_template('display_add_device.html',form_data=form_data)
+				return render_template('/admin/add_device.html',form_data=form_data)
 		else:
 			return redirect('/login')
 	else:
@@ -228,7 +228,7 @@ def devices():
 			device_info['alive'] = True
 		devices.append(device_info)
 	cur.close()
-	return render_template('display_devices.html', devices=devices)
+	return render_template('/device/devices.html', devices=devices)
 
 @app.route('/devices/<device_to_display>')
 def device(device_to_display):
@@ -275,7 +275,7 @@ def device(device_to_display):
 			data['expectedSubmissionsPercent'] = len(data_timeRecieved) / ((time() - first_data_time) / 300) * 100
 			data['lastDataMins'] = int((time() - last_data_time) / 60)
 		cur.close()
-		return render_template('display_one_device.html', device=device_name, data=data)
+		return render_template('/device/single_device.html', device=device_name, data=data)
 	else:
 		print("Error: Data returned not all the same length")
 		flash("Server Error for Device")
@@ -291,7 +291,7 @@ def manage():
 			for row in cur.fetchall():
 				devices.append({'deviceID':row[0], 'varname':row[1].replace(' ', '_'), 'name':row[1]})
 			cur.close()
-			return render_template('manage.html', devices=devices)
+			return render_template('/admin/manage.html', devices=devices)
 		else:
 			return redirect('/login')
 	else:
@@ -314,7 +314,7 @@ def manage_device(device_to_manage):
 					   'coords':{'lat':row[4], 'lon':row[5]},
 					   'MAC':row[6]}
 				cur.close()
-				return render_template('manage_device.html', device_info=device_info)
+				return render_template('/admin/manage_device.html', device_info=device_info)
 			elif request.method == "POST":
 				db,cur = dbconnection()
 				update_string = "UPDATE Devices SET "
@@ -341,25 +341,25 @@ def manage_device(device_to_manage):
 
 @app.route('/faq')
 def faq():
-    return render_template('faq.html')
+    return render_template('/static/faq.html')
 
 @app.route('/about')
 def about():
-	return render_template('about.html')
+	return render_template('/static/about.html')
 
 @app.route('/iot')
 def iot():
-	return render_template('iot.html')
+	return render_template('/static/iot.html')
 
 @app.route('/backend')
 def backend():
-	return render_template('backend.html')
+	return render_template('/static/backend.html')
 
 @app.errorhandler(400)
 @app.errorhandler(404)
 @app.errorhandler(500)
 def errorpage(e):
-	return render_template('error.html')
+	return render_template('/static/error.html')
 
 def cleanup():
 	try:
