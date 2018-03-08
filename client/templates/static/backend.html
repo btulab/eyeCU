@@ -7,17 +7,23 @@
   <header>
     <div class="inner">
       <h2>The Backend</h2>
-      <p>Configurations for our Server and Docker Containers</p>
+      <p>A description of our server</p>
     </div>
   </header>
+</section>
 
-  <!-- Content -->
-  <div class="wrapper">
-    <div class="inner">
+<!-- Content -->
+<div class="wrapper">
+  <div class="inner">
 
-      <section>
-        <h3 class="major">Requirements</h3>
-      </section>
+    <section>
+      <h3 class="major">Overview</h3>
+      <p>Our server runs two Docker containers to host the database and the web server. The dynamic engine of the eyeCU web page is written using Flask. As Flask is single threaded the application is proxied behind NGINX as a web services gateway interface (WSGI). The python application performs all database querying and inserts.</p>
+      <p>Communication between the IoT devices and the server is achieved over simple HTTP posts. The application accepts data only if it meets a predefined data schema.  The sensors send data using this format allowing for a layer of data integrity checking.  The next layer of data validation is achieved through statistical analysis.</p> 
+    </section>
+
+  </div>
+</div>
 
 
 {% endblock %}

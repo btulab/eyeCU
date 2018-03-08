@@ -3086,7 +3086,7 @@
 /* Banner */
 
 	#banner {
-		padding: 6em 0 1em 0 ;
+		padding: 0 0 2em 0 ;
 	}
 
 		#banner .inner {
@@ -3172,7 +3172,6 @@
 		@media screen and (max-width: 1280px) {
 
 			#banner {
-				padding: 7em 0 8.25em 0 ;
 				background-size: auto, cover;
 				background-position: center, center;
 			}
@@ -3182,7 +3181,7 @@
 		@media screen and (max-width: 980px) {
 
 			#banner {
-				padding: 12em 3em 12.375em 3em ;
+				padding: 0 3em 3em 3em ;
 			}
 
 				#banner .inner {
@@ -3194,7 +3193,7 @@
 		@media screen and (max-width: 736px) {
 
 			#banner {
-				padding: 5em 2em 4.25em 2em ;
+				padding: 0 2em 2em 2em ;
 			}
 
 				#banner .logo {

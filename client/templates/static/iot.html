@@ -6,18 +6,31 @@
 <section id="wrapper">
   <header>
     <div class="inner">
-      <h2>Construction of the IoT Devices</h2>
+      <h2>Our IoT Devices</h2>
       <p></p>
     </div>
   </header>
+</section>
 
   <!-- Content -->
   <div class="wrapper">
     <div class="inner">
 
       <section>
-        <h3 class="major">Requirements</h3>
+        <h3 class="major">Overview</h3>
+        <p>The sensor used for the EyeCU project is based on the ESP8266 WiFi module. The sensors are off the shelf components. The eyeCU IoT device monitors pedestrian traffic and air quality using a variety of Sparkfun sensors. Human activity is identified using the TSL2561 luminosity sensor, the sound detector, the Passive Infrared (PIR) Motion Sensor, and a LED pushbutton. Air quality is measured using the Sparkfun Environmental Combo breakout board, which houses both the CCS811 sensor for concentrations of CO2 and VOCs as well as the BME280 atmospheric conditions sensor. Data from these sensors is relayed back to the server by the ESP8266 Thing Dev board.</p>
+        <p>Both the environmental combo board and the luminosity sensor interface with the ESP8266 through I2C, and both can be powered with 3.3V. These sensors can be connected in parallel with corresponding SDA and SCL ports on the Thing as illustrated in the schematic. These two devices are already manufactured with different I2C addresses, so no changes are needed for hookup. Initially, the combo board was unable to provide readings for the CCS811 sensor in this configuration, but this issue was solved by doubling the I2C clock in the "core_esp8266_si2c.c" file”.</p>
+        <p>The sound sensor requires 5V to be powered and uses the GATE output to a digital pin which indicates that any sound is picked up with a HIGH signal as well as the ENVELOPE output to the Thing’s one analog pin which indicates the sound level.</p>
+        <p>The PIR sensor also requires 5V as well as a pullup resistor on its ALARM pin. This keeps the pin HIGH in periods of inactivity to avoid false positives. When motion is sensed, the pin is pulled LOW.</p>
+        <p>The LED pushbutton runs on 5V and also uses a pullup resistor on its switch. When pushed, the corresponding pin is pulled LOW.</p>
+      	<h3 class="major">Enclosure</h3>
+      	<p>The enclosure uses the bottom half of the SparkFun Big Red Box with a custom laser-cut faceplate attached. This faceplate exposes the sensors to the air for clean readings while sheltering the remainder of the board. Plans for the laser cut cover are available in the GitHub repo.</p>
+      	<h3 class="major">Firmware</h3>
+      	<p>The software controlling the eyeCU sensors can also be found on the Github. Each Thing has been registered by MAC Address to have access to CU’s WiFi. The Things first connect to this WiFi and take one round of data before attempting to contact the eyeCU servers. Once this contact has been made, the sensors will relay data once every five minutes.</p>
       </section>
+    </div>
+  </div>
+</section>
 
 
 {% endblock %}
