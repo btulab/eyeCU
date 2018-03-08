@@ -5,6 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from forms import ContactForm
 from flask_mail import Mail, Message
 from conf import dbconnection, motd
+import device as dev
 
 import flask_login
 from time import localtime, time, strftime
@@ -44,40 +45,8 @@ def index():
 			if (time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
-				db,cur = dbconnection()
-				last_update_dict[request.form['MAC']] = time()
-				insert_string_variables = ["deviceID", "timeRecieved"]
-				for key in valid_keys:
-					insert_string_variables.append(key)
-				print(insert_string_variables)
-				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC=%s", [request.form['MAC']])
-				device = cur.fetchall()
-				if (len(device) > 1):
-					print("Error: duplicate MAC -- " + request.form['MAC'])
-					return "Error: duplicate MAC"
-				deviceID = device[0][0]
-				deviceName = device[0][1]
-				insert_string_values = [int(deviceID), float(last_update_dict[request.form['MAC']])]
-				insert_string_values = {"deviceID": int(deviceID), "timeRecieved": float(last_update_dict[request.form['MAC']])}
-				for key in valid_keys:
-					if key in request.form:
-						if (key == "MAC"):
-							insert_string_values[key] = str("'" + request.form[key] + "'")
-						elif (key == "button" or key == "motion"):
-							insert_string_values[key] = int(request.form[key])
-						else:
-							insert_string_values[key] = float(request.form[key])
-					else:
-						return "Error: all variables must be present"
-				sql = "INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%s,%f,%f,%d,%d)" % (insert_string_values['deviceID'], insert_string_values['timeRecieved'], insert_string_values['temperature'], insert_string_values['co2'], insert_string_values['pressure'], insert_string_values['humidity'], insert_string_values['altitude'], insert_string_values['sound'], insert_string_values['MAC'], insert_string_values['voc'], insert_string_values['light'], insert_string_values['button'], insert_string_values['motion'])
-				cur.execute(sql)
-				print("POST FROM -- " + request.form['MAC'])
-				msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
-				socketio.emit('update', {'msg':msg});
-				db.commit()
-				cur.close()
-
-				return "Success!"
+			    last_update_dict[request.form['MAC']] = time()
+			    dev.add_data(last_update_dict)
 		else:
 			return "Could not verify MAC."
 	else:
@@ -217,17 +186,7 @@ def add_device():
 
 @app.route('/devices')
 def devices():
-	devices = []
-	db,cur = dbconnection()
-	cur.execute("SELECT deviceID,name,MAC FROM Devices")
-	for row in cur.fetchall():
-		device_info = {'deviceID':row[0], 'name':row[1]}
-		if (time() - last_update_dict[row[2]]) > (300 * 4):		#If the device has missed more than 4 updates
-			device_info['alive'] = False
-		else:
-			device_info['alive'] = True
-		devices.append(device_info)
-	cur.close()
+	devices=dev.device_state(last_update_dict)
 	return render_template('/device/devices.html', devices=devices)
 
 @app.route('/devices/<device_to_display>')
