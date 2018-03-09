@@ -169,7 +169,7 @@ function displayStats() {
 			<tr>
 				<td><span class="stats_title">Device Uptime</span>
 					<br><br>
-					<div class="c100 p{{ data['expectedSubmissionsPercent']|int }}">
+					<div class="c100 p{{ data['expectedSubmissionsPercent']|int }}{% if data['expectedSubmissionsPercent']|int > 75 %} green{% elif data['expectedSubmissionsPercent']|int > 50 %} yellow{% elif data['expectedSubmissionsPercent']|int > 25 %} orange{% else %} red{% endif %}">
 						<span>{{ '%0.2f' % data['expectedSubmissionsPercent'] }}% </span>
 					<div class="slice">
 						<div class="bar"></div>
