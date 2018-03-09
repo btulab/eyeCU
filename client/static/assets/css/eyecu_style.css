@@ -103,6 +103,10 @@ a:hover {
 	margin-right: 30vw;
 }
 
+#devices:hover {
+	background-color: #363949;
+}
+
 .chart {
 	max-width: 900px;
 	margin: auto;
