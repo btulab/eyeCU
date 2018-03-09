@@ -1,3 +1,4 @@
+from flask import request
 import configparser
 import MySQLdb
 from flask_socketio import emit
@@ -6,7 +7,7 @@ from conf import dbconnection
 
 valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
 
-def add_data(last_update_dict):
+def add_data(last_update_dict,request):
 	db,cur = dbconnection()
 	insert_string_variables = ["deviceID", "timeRecieved"]
 	for key in valid_keys:
@@ -35,10 +36,9 @@ def add_data(last_update_dict):
 	cur.execute(sql)
 	print("POST FROM -- " + request.form['MAC'])
 	msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
-	socketio.emit('update', {'msg':msg});
 	db.commit()
 	cur.close()
-	return "Success!"
+	return msg
 
 def device_state(last_update_dict):
         devices = []

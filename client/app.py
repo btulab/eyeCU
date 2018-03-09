@@ -47,8 +47,10 @@ def index():
 			else:
 			    last_update_dict[request.form['MAC']] = time()
 			    # call device.py helper function
-			    dev.add_data(last_update_dict)
-			    devices = dev.devices(last_update_dict)
+			    msg = dev.add_data(last_update_dict,request)
+			    devices = dev.device_state(last_update_dict)
+			    socketio.emit('update', {'msg':msg});
+			    return "success"
 
 		else:
 			return "Could not verify MAC."
