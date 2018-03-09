@@ -36,6 +36,21 @@ def createUser(username, password):
     cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
     passhash = cur.fetchall()
 
+def login(username,password):
+    db,cur = dbconnection()
+    cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
+    if cur.fetchone()[0]:
+        cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
+        salt = cur.fetchall()
+        password = password + salt[0][0]
+        cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
+        passhash = cur.fetchall()
+        cur.close()
+        if pbkdf2_sha256.verify(password, passhash[0][0]):
+            return True
+        
+    return False
+
 if __name__ == '__main__':
 
     if len(sys.argv) != 3:

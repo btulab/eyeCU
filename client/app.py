@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_socketio import SocketIO
 from flask_socketio import emit
-from passlib.hash import pbkdf2_sha256
-from forms import ContactForm
 from flask_mail import Mail, Message
 from conf import dbconnection, motd
+import device as dev
+import auth as auth
 
 import flask_login
 from time import localtime, time, strftime
@@ -22,6 +22,7 @@ version = '0.9.1-3'
 
 last_message = 'Test Device just said HI!'
 last_update_dict = {"AA:BB:CC:DD:EE:FF": 0} #used to store the last update recieved from a device
+devices = []
 
 # Init db dbconnection
 db,cur = dbconnection()
@@ -44,40 +45,11 @@ def index():
 			if (time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
-				db,cur = dbconnection()
-				last_update_dict[request.form['MAC']] = time()
-				insert_string_variables = ["deviceID", "timeRecieved"]
-				for key in valid_keys:
-					insert_string_variables.append(key)
-				print(insert_string_variables)
-				cur.execute("SELECT deviceID,name FROM Devices WHERE MAC=%s", [request.form['MAC']])
-				device = cur.fetchall()
-				if (len(device) > 1):
-					print("Error: duplicate MAC -- " + request.form['MAC'])
-					return "Error: duplicate MAC"
-				deviceID = device[0][0]
-				deviceName = device[0][1]
-				insert_string_values = [int(deviceID), float(last_update_dict[request.form['MAC']])]
-				insert_string_values = {"deviceID": int(deviceID), "timeRecieved": float(last_update_dict[request.form['MAC']])}
-				for key in valid_keys:
-					if key in request.form:
-						if (key == "MAC"):
-							insert_string_values[key] = str("'" + request.form[key] + "'")
-						elif (key == "button" or key == "motion"):
-							insert_string_values[key] = int(request.form[key])
-						else:
-							insert_string_values[key] = float(request.form[key])
-					else:
-						return "Error: all variables must be present"
-				sql = "INSERT INTO Data (" + ",".join(insert_string_variables) + ") VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%s,%f,%f,%d,%d)" % (insert_string_values['deviceID'], insert_string_values['timeRecieved'], insert_string_values['temperature'], insert_string_values['co2'], insert_string_values['pressure'], insert_string_values['humidity'], insert_string_values['altitude'], insert_string_values['sound'], insert_string_values['MAC'], insert_string_values['voc'], insert_string_values['light'], insert_string_values['button'], insert_string_values['motion'])
-				cur.execute(sql)
-				print("POST FROM -- " + request.form['MAC'])
-				msg = ("Data recieved from %s <a href=\"/devices/%s\">(Device: %s)</a>" % (deviceName,deviceID,deviceID))
-				socketio.emit('update', {'msg':msg});
-				db.commit()
-				cur.close()
+			    last_update_dict[request.form['MAC']] = time()
+			    # call device.py helper function
+			    dev.add_data(last_update_dict)
+			    devices = dev.devices(last_update_dict)
 
-				return "Success!"
 		else:
 			return "Could not verify MAC."
 	else:
@@ -103,7 +75,7 @@ def map():
 	except:
 		print("Error pulling data from mariadb")
 
-	return render_template('map.html', location_info=location_info)
+	return render_template('/device/map.html', location_info=location_info)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -111,37 +83,23 @@ def login():
 	if request.method == "POST":
 		username = request.form["username"] or "null"
 		password = request.form["password"] or "null"
-
 		try:
-			db,cur = dbconnection()
-			cur.execute("SELECT COUNT(1) FROM Users WHERE email = %s;", [username])
-			if cur.fetchone()[0]:
-				cur.execute("SELECT salt FROM Users WHERE email = %s;", [username])
-				salt = cur.fetchall()
-				password = password + salt[0][0]
-				cur.execute("SELECT hash FROM Users WHERE email = %s;", [username])
-				passhash = cur.fetchall()
-				cur.close()
-				if pbkdf2_sha256.verify(password, passhash[0][0]):
-					session['authenticated'] = True
-					session['username'] = username
-					msg = ("%s has logged in...something's broken..." % username.upper())
-					socketio.emit('update', {'msg':msg});
-					return redirect('/')
-				else:
-					error = "Incorrect username or password!"
-					return render_template("/admin/login.html", error=error)
-			else:
-				error = "Incorrect username or password!"
-				return render_template("/admin/login.html", error=error)
-	
+		    if auth.login(username,password):
+		        session['authenticated'] = True
+		        session['username'] = username
+		        msg = ("%s has logged in...something's broken..." % username.upper())
+		        socketio.emit('update', {'msg':msg});
+		        return redirect('/')
+		    else:
+		        error = "Incorrect username or password!"
+		        return render_template("/admin/login.html", error=error)
+
 		except:
-			print("Error accessing database.")
-			error = "Our server is experiencing issues processing your request."
-			msg = ("Users are having trouble accessing our database...")
-			socketio.emit('update', {'msg':msg});
-			return render_template("/admin/login.html", error=error)
-		
+		    print("Error accessing database.")
+		    error = "Our server is experiencing issues processing your request."
+		    msg = ("Users are having trouble accessing our database...")
+		    socketio.emit('update', {'msg':msg});
+		    return render_template("/admin/login.html", error=error)
 	elif request.method == "GET":
 		return render_template("/admin/login.html")
 
@@ -217,17 +175,7 @@ def add_device():
 
 @app.route('/devices')
 def devices():
-	devices = []
-	db,cur = dbconnection()
-	cur.execute("SELECT deviceID,name,MAC FROM Devices")
-	for row in cur.fetchall():
-		device_info = {'deviceID':row[0], 'name':row[1]}
-		if (time() - last_update_dict[row[2]]) > (300 * 4):		#If the device has missed more than 4 updates
-			device_info['alive'] = False
-		else:
-			device_info['alive'] = True
-		devices.append(device_info)
-	cur.close()
+	devices=dev.device_state(last_update_dict)
 	return render_template('/device/devices.html', devices=devices)
 
 @app.route('/devices/<device_to_display>')
