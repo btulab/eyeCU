@@ -4,6 +4,8 @@ from flask_socketio import emit
 from time import localtime, time, strftime
 from conf import dbconnection
 
+valid_keys = ["temperature", "co2", "pressure", "humidity", "altitude", "sound", "MAC", "voc", "light", "button", "motion"]
+
 def add_data(last_update_dict):
 	db,cur = dbconnection()
 	insert_string_variables = ["deviceID", "timeRecieved"]
@@ -51,3 +53,6 @@ def device_state(last_update_dict):
                 devices.append(device_info)
         cur.close()
         return devices
+
+def device_data():
+    pass
