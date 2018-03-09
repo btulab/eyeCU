@@ -7,7 +7,7 @@
 		<table class="status_table">
 		<tr><td><span style="margin-right: 30px;"><b><u>Name</u></b></span><span style="float: right;"><span class="device_status"><b><u>Online</u></b></span></span></td></a></tr>
 		{% for device in devices %}
-		<tr id="devices"><td><a href="/devices/{{ device['deviceID'] }}#" class="list_link">
+		<tr id="devices"><td>
 		<span style="margin-right: 30px;">{{ device['name'] }}</span>
 		<span style="float: right;">
 
@@ -16,8 +16,8 @@
 			{% else %}red"><li class="fa fa-times-circle"></li>
 			{% endif %}
 			</span>
-			<span><li class="fa fa-share-square"></li></span>
-		</td></a></tr>
+			<span><a href="/devices/{{ device['deviceID'] }}" class="special" style="float: right; margin: 0;"></a></span>
+		</td></tr>
 		{% endfor %}
 		</table>
 	</div>
