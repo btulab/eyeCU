@@ -45,14 +45,15 @@ def index():
 			if (time() - last_update_dict[request.form['MAC']]) < 300:
 				return "Too Many Requests."
 			else:
-			    last_update_dict[request.form['MAC']] = time()
-			    # call device.py helper function
-			    msg = dev.add_data(last_update_dict,request)
-			    devices = dev.device_state(last_update_dict)
-			    socketio.emit('update', {'msg':msg});
-			    return "success"
+				last_update_dict[request.form['MAC']] = time()
+				# call device.py helper function
+				msg = dev.add_data(last_update_dict,request)
+				devices = dev.device_state(last_update_dict)
+				socketio.emit('update', {'msg':msg});
+				return "success"
 
 		else:
+			print("Could not verify " + request.form['MAC'])
 			return "Could not verify MAC."
 	else:
 		session['version'] = version

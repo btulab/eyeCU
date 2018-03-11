@@ -1705,7 +1705,7 @@
 			border-bottom-color: transparent;
 		}
 
-		a.special:not(.button) {
+		a.special:not(.button), li.special:not(.button) {
 			text-decoration: none;
 			border-bottom: 0;
 			display: block;
@@ -1717,7 +1717,7 @@
 			text-transform: uppercase;
 		}
 
-			a.special:not(.button):before {
+			a.special:not(.button):before, li.special:not(.button):before {
 				-moz-osx-font-smoothing: grayscale;
 				-webkit-font-smoothing: antialiased;
 				font-family: FontAwesome;
@@ -1726,7 +1726,7 @@
 				text-transform: none !important;
 			}
 
-			a.special:not(.button):before {
+			a.special:not(.button):before, li.special:not(.button):before {
 				-moz-transition: background-color 0.2s ease-in-out;
 				-webkit-transition: background-color 0.2s ease-in-out;
 				-ms-transition: background-color 0.2s ease-in-out;
@@ -1745,11 +1745,11 @@
 				width: 2em;
 			}
 
-			a.special:not(.button):hover:before {
+			a.special:not(.button):hover:before, li.special:not(.button):hover:before {
 				background-color: rgba(255, 255, 255, 0.025);
 			}
 
-			a.special:not(.button):active:before {
+			a.special:not(.button):active:before, li.special:not(.button):active:before {
 				background-color: rgba(255, 255, 255, 0.075);
 			}
 
