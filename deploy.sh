@@ -44,7 +44,8 @@ launch_test_image() {
 
   # Run our tests
   GET_REQUEST=$(curl --silent -I -X GET localhost:5000 | head -n 1 | cut -d$' ' -f2)
-  if [ "$GET_REQUEST" != "200" ] 
+	POST_REQUEST=$(curl --silent -X POST -F "temperature=24" -F "co2=100" -F "pressure=90000" -F "humidity=77" -F "altitude=5500" -F "sound=1" -F "MAC=5C:CF:7F:AE:D9:E9" -F "voc=20" -F "button=1" -F "light=50" -F "motion=1" localhost:5000 | grep -o "Success")
+  if [[ "$GET_REQUEST" != "200" && "$POST_REQUEST" != "Success" ]]
   then
     echo -e "${RED}UPDATE FAILED${NC}"
     echo -e "${RED}ERROR HANDLING GET REQUEST${NC}"
