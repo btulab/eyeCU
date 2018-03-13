@@ -178,7 +178,16 @@ def add_device():
 
 @app.route('/devices')
 def devices():
-	devices=dev.device_state(last_update_dict)
+	tmp_list = dev.device_state(last_update_dict)
+	device_names = []
+	sorted_devices = []
+	for row in tmp_list:
+		device_names.append(row['name'])
+	for name in sorted(device_names):
+		for row in tmp_list:
+			if row['name'] == name:
+				sorted_devices.append(row)
+	devices=sorted_devices
 	return render_template('/device/devices.html', devices=devices)
 
 @app.route('/devices/<device_to_display>')
