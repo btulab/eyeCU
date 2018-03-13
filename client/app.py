@@ -65,7 +65,7 @@ def map():
 	location_info = []
 	try: 
 		db,cur = dbconnection()
-		cur.execute("SELECT deviceID,name,descr,lat,lon FROM  Devices")
+		cur.execute("SELECT deviceID,name,descr,lat,lon FROM Devices ORDER BY name")
 		for row in cur.fetchall():
 			location_info.append({
 			'id':row[0],
