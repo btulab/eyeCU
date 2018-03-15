@@ -14,6 +14,7 @@
 			Coordinates <i>(default is center of map)</i><br>
 			Lat: <input type="text" name="lat" value="{% if form_data['lat'] %}{{ form_data['lat'] }}{% else %}40.0056{% endif %}" required><br>
 			Lon: <input type="text" name="lon" value="{% if form_data['lon'] %}{{ form_data['lon'] }}{% else %}-105.2672{% endif %}" required><br>
+			Font Awesome Icon: <input type="text" name="icon" value="{% if form_data['icon'] %}{{ form_data['icon'] }}{% else %}uf188{% endif %}" required><br>
 			MAC: <input type="text" name="MAC" placeholder="XX:XX:XX:XX:XX:XX" {% if form_data['MAC'] %}value="{{ form_data['MAC'] }}"{% endif %} required><br>
 			<div>
 				<input type="submit" value="Add">

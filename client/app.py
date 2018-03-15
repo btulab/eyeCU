@@ -17,7 +17,7 @@ import atexit
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 socketio = SocketIO(app)
-version = '0.9.1-3'
+version = '0.9.14-3'
 
 
 last_message = 'Test Device just said HI!'
@@ -122,7 +122,7 @@ def add_device():
 				macs = []
 				coords = []
 				db,cur = dbconnection()
-				cur.execute("SELECT name,MAC,lat,lon FROM Devices")
+				cur.execute("SELECT name,MAC,lat,lon,icon FROM Devices")
 				for row in cur.fetchall():
 					   names.append(str(row[0])) 
 					   macs.append(str(row[1]))
@@ -151,13 +151,14 @@ def add_device():
 					cur.execute("SELECT deviceID FROM Devices ORDER BY deviceID desc limit 1")
 					for row in cur.fetchall():
 						deviceID = int(row[0]) + 1
-					insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, MAC) VALUES ("
+					insert_string = "INSERT INTO Devices (deviceID, deviceType, name, descr, lat, lon, icon, MAC) VALUES ("
 					insert_string += str(deviceID) + ","
 					insert_string += "\"" + str(request.form['deviceType']) + "\","
 					insert_string += "\"" + str(request.form['name']) + "\","
 					insert_string += "\"" + str(request.form['descr']) + "\","
 					insert_string += str(request.form['lat']) + ","
 					insert_string += str(request.form['lon']) + ","
+					insert_string += "\"" + str(request.form['icon']) + "\""
 					insert_string += "\"" + str(request.form['MAC']) + "\""
 					insert_string += ")"
 					cur.execute(insert_string)
@@ -265,7 +266,7 @@ def manage_device(device_to_manage):
 			if request.method == "GET":
 				device_info = {}
 				db,cur = dbconnection()
-				cur.execute("SELECT deviceID,deviceType,name,descr,lat,lon,MAC FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
+				cur.execute("SELECT deviceID,deviceType,name,descr,lat,lon,icon,MAC FROM Devices WHERE deviceID='" + device_to_manage + "' LIMIT 1")
 				for row in cur.fetchall():
 					device_info = {
 					   'deviceID':row[0],
@@ -273,7 +274,8 @@ def manage_device(device_to_manage):
 					   'name':row[2],
 					   'descr':row[3],
 					   'coords':{'lat':row[4], 'lon':row[5]},
-					   'MAC':row[6]}
+					   'icon':row[6],
+					   'MAC':row[7]}
 				cur.close()
 				return render_template('/admin/manage_device.html', device_info=device_info)
 			elif request.method == "POST":
@@ -283,6 +285,7 @@ def manage_device(device_to_manage):
 				update_string += "descr=\"" + str(request.form['descr']) + "\","
 				update_string += "lat=" + str(request.form['lat']) + ","
 				update_string += "lon=" + str(request.form['lon']) + ","
+				update_string += "icon=\"" + str(request.form['icon']) + "\","
 				update_string += "MAC=\"" + str(request.form['MAC']) + "\""
 				update_string += " WHERE deviceID=" + device_to_manage
 				cur.execute(update_string)
