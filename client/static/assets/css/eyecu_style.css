@@ -15,7 +15,7 @@ a:hover {
 }
 
 
-#sone, #stwo, #sthree {
+#sone, #stwo, #sthree #sfour{
 	display: inline-block;
 /*	width: 20%;
 	padding: .75rem 0;
@@ -24,22 +24,26 @@ a:hover {
 }
 
 #sone:hover ~ hr {
-	margin-left: 31%;
+	margin-left: 28%;
 }
 
 #stwo:hover ~ hr {
- margin-left: 44%;
+ margin-left: 40%;
 }
 
 #sthree:hover ~ hr {
-	margin-left: 58%;
+	margin-left: 53%;
+}
+
+#sfour:hover ~ hr {
+	margin-left: 66%;
 }
 
 #floater {
   height: .25rem;
-  width: 10%;
+  width: 8%;
   margin: 0;
-	margin-left: 44%;
+	margin-left: 40%;
   background: tomato;
   border: none;
   transition: .3s ease-in-out;
