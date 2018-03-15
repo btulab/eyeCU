@@ -272,7 +272,16 @@
 	        		position: {lat: {{ device['coords']['lat'] }}, 
 	        				   lng: {{ device['coords']['lon'] }}},
 	        		map: map,
-	        		icon: markerIcon,
+							label: {
+								fontFamily: 'Fontawesome',
+								text: '\uf188', //code for font-awesome icon
+								fontSize: '18px',
+								color: 'black'
+							},
+							icon: {
+								path: google.maps.SymbolPath.CIRCLE, //or any others
+								scale: 0
+							},
 		        });
 	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
 				content: "<div class='marker_desc'><h4>{{ device['name'] }}</h4><hr><br>{{ device['desc'] }}</p><p><a href='/devices/{{ device['id'] }}#' style='color: grey;'>View Device Data ></a></div>",
