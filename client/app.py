@@ -65,15 +65,16 @@ def map():
 	location_info = []
 	try: 
 		db,cur = dbconnection()
-		cur.execute("SELECT deviceID,name,descr,lat,lon FROM Devices ORDER BY name")
+		cur.execute("SELECT deviceID,name,descr,lat,lon,icon FROM Devices ORDER BY name")
 		for row in cur.fetchall():
 			location_info.append({
 			'id':row[0],
 			'name':row[1], 
 			'varname':row[1].replace(' ', '_'), 
 			'coords':{'lat':row[3], 'lon':row[4]}, 
+			'icon': row[5],
 			'desc':row[2]
-			})
+		})
 		cur.close()
 	except:
 		print("Error pulling data from mariadb")

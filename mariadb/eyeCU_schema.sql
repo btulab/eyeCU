@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `eyedb`.`Devices` (
   `descr` VARCHAR(150) NULL,
   `lat` DOUBLE NULL,
   `lon` DOUBLE NULL,
+	`icon` VARCHAR(6) DEFAULT '\uf188',
   `MAC` VARCHAR(17),
   PRIMARY KEY (`deviceID`))
 ENGINE = InnoDB;
