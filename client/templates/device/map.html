@@ -273,14 +273,14 @@
 	        				   lng: {{ device['coords']['lon'] }}},
 	        		map: map,
 							label: {
-								fontFamily: 'Fontawesome',
-								text: '\{{ device['icon'] }}', //code for font-awesome icon
-								fontSize: '18px',
-								color: 'black'
+								fontFamily: "Fontawesome",
+								text: "\{{ device['icon'] }}",
+								fontSize: "18px",
+								color: "black",
 							},
 							icon: {
-								path: google.maps.SymbolPath.CIRCLE, //or any others
-								scale: 0
+								path: google.maps.SymbolPath.CIRCLE,
+								scale: 0,
 							},
 		        });
 	        	var {{ device['varname'] }}_info = new google.maps.InfoWindow({
