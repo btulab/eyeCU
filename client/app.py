@@ -3,6 +3,7 @@ from flask_socketio import SocketIO
 from flask_socketio import emit
 from flask_mail import Mail, Message
 from conf import dbconnection, motd
+from version import get_version
 import device as dev
 import auth as auth
 
@@ -17,7 +18,7 @@ import atexit
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 socketio = SocketIO(app)
-version = '0.9.14-3'
+version = '0.9' + get_version()
 
 
 last_message = 'Test Device just said HI!'
