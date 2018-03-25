@@ -17,10 +17,6 @@ a:hover {
 
 #sone, #stwo, #sthree #sfour{
 	display: inline-block;
-/*	width: 20%;
-	padding: .75rem 0;
-	margin: 0;
-	text-decoration: none; */
 }
 
 #sone:hover ~ hr {
@@ -210,8 +206,8 @@ form > h2 {
 	z-index: -1;
 	position: fixed;
 	opacity: .04;
-
 }
+
 @keyframes snow {
   0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
   50% {background-position: 500px 500px, 100px 200px, -100px 150px;}
@@ -233,20 +229,18 @@ form > h2 {
   100% {background-position: 500px 1000px, 200px 400px, -100px 300px;}
 }
 
-
 #version {
 
   position: absolute;
   top: 1.5vh;
   padding-left: 15px;
-  font-size: 14px;
+  font-size: 12px;
   font-style: italic;
   font-weight: bold;
   opacity: .4;
 }
 
 #statusBar {
-
 	padding-top: 6.5vh;
 	padding-left: 15px;
 	display: block;
@@ -257,44 +251,34 @@ form > h2 {
 }
 
 #status {
-
 	position: relative;
 	color: #6ad3ff;
 	font-weight: bold;
 	opacity: .3;
 	resize: none;
 	text-align: left;
-/*	padding-left: 15px;
-	padding-right: 10vw;*/
 	margin: 0;
 	margin-bottom: -8px;
 	white-space: nowrap;
 	overflow: hidden;
-
 }
 
 #status:nth-child(even) {
 	color: #ddfdff;
 }
 
-
 /* Animation */
 .anim-typewriter{
-  animation: typewriter 4.5s steps(58) 1s 1 normal both,
-             blinkTextCursor 500ms steps(44) infinite normal;
+  animation: typewriter 4.5s steps(58) 1s 1 normal both;
 }
+
 @keyframes typewriter{
   from{width: 0;}
   to{width: 100%;}
 }
-@keyframes blinkTextCursor{
-  from{border-right-color: rgba(255,255,255,.75);}
-  to{border-right-color: transparent;}
-}
 
 /* The alert message box */
 .alert {
-
     position: absolute;
     left: 0;
     right: 0;
@@ -325,8 +309,6 @@ form > h2 {
 .closebtn:hover {
     color: black;
 }
-
-
 
 @media screen and (max-width: 736px) {
 	.container {
